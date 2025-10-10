@@ -16,7 +16,7 @@ export default function Custom404() {
                             size="lg"
                             className="bg-amber-500"
                             onClick={() => {
-                                navigate('/dashboard');
+                                navigate('/');
                             }}
                         >
                             Go to Homepage

@@ -16,7 +16,7 @@ export default function ChangePassword() {
               <CardTitle>Change Password</CardTitle>
               </CardHeader>
               <Button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/")}
                 className="bg-amber-500"
               >
                 Back

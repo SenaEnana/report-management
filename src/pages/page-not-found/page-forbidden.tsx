@@ -15,7 +15,7 @@ export default function PageForbidden() {
                             size="lg"
                             className="bg-amber-500"
                             onClick={() => {
-                                navigate('/dashboard');
+                                navigate('/');
                             }}
                         >
                             Go to Homepage

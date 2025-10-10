@@ -15,20 +15,3 @@ createRoot(document.getElementById("root")!).render(
     </ReduxProvider>
   </StrictMode>
 );
-
-
-
-// import { StrictMode } from "react";
-// import { createRoot } from "react-dom/client";
-// import store from "./store/store";
-// import { Provider as ReduxProvider } from "react-redux"; // Redux Provider
-// import "./index.css";
-// import App from "./App.tsx";
-
-// createRoot(document.getElementById("root")!).render(
-//   <StrictMode>
-//     <ReduxProvider store={store}>
-//       <App />
-//     </ReduxProvider>
-//   </StrictMode>
-// );

@@ -18,11 +18,10 @@ export const signIn = async (
     console.log("request: ", username, password);
 
     const response = await axios.post<SignInResponse>(
-      "http://172.24.111.254:3000/api/auth/login",
+      "http://172.24.111.254:5000/api/auth/login",
       {
         username: username,
         password: password,
-        // remember_me: remember_me
       }
     );
 
@@ -52,7 +51,7 @@ export const changePasswordApi = async (
   confirm_password: string,
 ) => {
   try {
-    const { data } = await apiClient.post("/api/change-password", {
+    const { data } = await apiClient.post("/api/auth/change-password", {
       current_password,
       password,
       confirm_password,

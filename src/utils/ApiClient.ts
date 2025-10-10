@@ -4,8 +4,7 @@ import store from "../store/store";
 
 // Create an Axios instance
 const apiClient = axios.create({
-  baseURL: "http://dev.harambeeuniversity.edu.et:8080", 
-  // baseURL: "http://196.189.233.123:8080", 
+  baseURL: "http://172.24.111.254:5000/", 
 });
 
 // Set global headers

@@ -18,16 +18,6 @@ export default function PageWrapper({children}:any) {
     href: '#'
   }];
   return (
-  //   <SidebarProvider>
-  //   <AppSidebar />
-  //   <div className="flex flex-1 flex-col">
-  //     {/* Place Navbar here to prevent conflicts */}
-  //     <Navbar  />
-  //     <SidebarInset>
-  //       <div className="flex flex-1 flex-col gap-4 p-4 pt-5">{children}</div>
-  //     </SidebarInset>
-  //   </div>
-  // </SidebarProvider>
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
