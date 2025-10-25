@@ -22,7 +22,6 @@ apiClient.interceptors.request.use(
 
     // Check if token exists
     if (token) {
-      // Add token to Authorization header
       config.headers.Authorization = `Bearer ${token}`;
 
       // Check if token is expired
@@ -31,13 +30,9 @@ apiClient.interceptors.request.use(
 
       if (currentTime >= tokenExpiry) {
         
-        
-        // Token expired, dispatch signOut action
         store.dispatch(signOut());
 
-        // Redirect to login page
        window.location.href = "/sign-in";
-        // Replace with the route to your login page
 
         return Promise.reject(new Error("Token expired. Redirecting to login."));
       }

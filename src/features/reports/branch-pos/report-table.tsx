@@ -9,35 +9,49 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 type ReportRow = {
-  merchant_name: string;
+  branch_name: string;
   terminal_id: string;
-  sum_local_txn: number;
-  sum_local_txn_amount: number;
-  sum_visa_txn: number;
+  cash_advance_amount: number;
+  visa_txn: number;
   visa_dollar: string;
-  branch: string;
+  mc_dollar: string;
   district: string;
+  cup_dollar: number;
+  total_amount: number;
+  grand_total: number;
+  mc_amount: number;
+  cup_amount: number;
 };
 
 const columnsConfig: {
   accessorKey: keyof ReportRow;
   title: string;
 }[] = [
-  { accessorKey: "merchant_name", title: "Merchant" },
+  { accessorKey: "branch_name", title: "Branch" },
   { accessorKey: "terminal_id", title: "Terminal ID" },
-  { accessorKey: "sum_local_txn", title: "Local Txns" },
-  { accessorKey: "sum_local_txn_amount", title: "Local Amount" },
-  { accessorKey: "sum_visa_txn", title: "VISA Txns" },
+  { accessorKey: "cash_advance_amount", title: "CA Amount" },
+  { accessorKey: "visa_txn", title: "VISA Txns" },
   { accessorKey: "visa_dollar", title: "VISA $ (USD)" },
-  { accessorKey: "branch", title: "Branch" },
   { accessorKey: "district", title: "District" },
+  { accessorKey: "mc_amount", title: "MC Amount" },
+  { accessorKey: "mc_dollar", title: "MC $" },
+  { accessorKey: "cup_amount", title: "China Amount" },
+  { accessorKey: "cup_dollar", title: "China $" },  
+  { accessorKey: "total_amount", title: "Total Amount" },
+  { accessorKey: "grand_total", title: "Grand Total" },   
 ];
+
+    //   mergedData.push({
+    //     mc_txn: item["MC_TXN"] || 0,
+    //     cup_txn: item["CUP_TXN"] || 0,
+    //     total_txn: item["TOTAL_TXN"] || 0,
+
 
 export default function ReportTable() {
   const [data, setData] = useState<ReportRow[]>([]);
 
   useEffect(() => {
-    const jsonData = localStorage.getItem("lastReportData");
+    const jsonData = localStorage.getItem("lastBranchReportData");
     if (jsonData) {
       setData(JSON.parse(jsonData));
     }

@@ -2,7 +2,7 @@ import axios from "axios";
 import apiClient from "@/utils/ApiClient";
 
 interface SignInResponse {
-  access_token: string;
+  token: string | null;
   token_type: string;
   expires_at: string;
   user: {
@@ -10,6 +10,7 @@ interface SignInResponse {
     username: string;
   };
 }
+
 export const signIn = async (
   username: string,
   password: string,
@@ -46,15 +47,15 @@ export const signIn = async (
 export default { signIn };
 
 export const changePasswordApi = async (
-  current_password: string,
-  password: string,
-  confirm_password: string,
+  currentPassword: string,
+  newPassword: string,
+  // confirm_password: string,
 ) => {
   try {
     const { data } = await apiClient.post("/api/auth/change-password", {
-      current_password,
-      password,
-      confirm_password,
+      currentPassword,
+      newPassword,
+      // confirm_password,
     });
     return data;
   } catch (error: any) {

@@ -39,16 +39,14 @@ export const signInThunk = createAsyncThunk<UserState, { username: string; passw
     if (response) {
       const userDataObj: UserState = {
         username: response.user.username,
-        // name: response.user.name,
-        // email: response.user.email,
         loading: false,
         error: null,
         isAuth: true,
-        token: response.access_token,
-        tokenType: response.token_type,
-        expiresAt: response.expires_at,
-        // userId: response.data.data._id,
+        token: response.token,
+        tokenType: "Bearer",
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hour from now
       };
+
       saveUserDataToLocalStorage(userDataObj);
       return userDataObj;
     } else {

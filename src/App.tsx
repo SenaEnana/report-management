@@ -2,8 +2,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import CreateUser from "./pages/user/CreateUser";
-// import ViewUser from "./pages/user/ViewUser";
 // import DetailUser from "./pages/user/DetailUser";
 // import EditUser from "./pages/user/EditUser";
 import ChangePassword from "./pages/auth/ChangePassword";
@@ -11,8 +9,12 @@ import Custom404 from "./pages/page-not-found/page-not-found";
 import PageForbidden from "./pages/page-not-found/page-forbidden";
 import SignIn from "./pages/auth/SignIn";
 import Dashboard from "./pages/Dashboard";
-import ImportReport from "./pages/reports/ImportReport";
-import ViewReportTable from "./pages/reports/ViewReportTable";
+import CreateUser from "./pages/user/CreateUser";
+import ViewUser from "./pages/user/ViewUser";
+import ImportMerchantReport from "./pages/reports/merchant-pos/ImportMerchantReport";
+import ImportBranchReport from "./pages/reports/branch-pos/ImportBranchReport";
+import ViewMerchantReport from "./pages/reports/merchant-pos/ViewMerchantReport";
+import ViewBranchReport from "./pages/reports/branch-pos/ViewBranchReport";
   
   function App() {
   const queryClient = new QueryClient();
@@ -41,6 +43,22 @@ import ViewReportTable from "./pages/reports/ViewReportTable";
                  </ProtectedRoute>
                }
              />
+            <Route
+               path="user/view/create"
+               element={
+                 <ProtectedRoute>
+                   <CreateUser />
+                 </ProtectedRoute>
+               }
+             />
+            <Route
+               path="user/view"
+               element={
+                 <ProtectedRoute>
+                   <ViewUser />
+                 </ProtectedRoute>
+               }
+             />             
              <Route
                path="*"
                element={
@@ -58,18 +76,34 @@ import ViewReportTable from "./pages/reports/ViewReportTable";
                }
              />
              <Route
-               path="/reports/import-report"
+               path="/reports/merchant-pos/import-report"
                element={
                  <ProtectedRoute>
-                   < ImportReport/>
+                   <ImportMerchantReport/>
                  </ProtectedRoute>
                }
              />
              <Route
-               path="/reports/view-report-table"
+               path="/reports/merchant-pos/view"
                element={
                  <ProtectedRoute>
-                   <ViewReportTable/>
+                   <ViewMerchantReport/>
+                 </ProtectedRoute>
+               }
+             />             
+              <Route
+               path="/reports/branch-pos/import-report"
+               element={
+                 <ProtectedRoute>
+                   <ImportBranchReport/>
+                 </ProtectedRoute>
+               }
+             />
+             <Route
+               path="/reports/branch-pos/view"
+               element={
+                 <ProtectedRoute>
+                   <ViewBranchReport/>
                  </ProtectedRoute>
                }
              />

@@ -61,7 +61,7 @@ const data = {
       items: [
         {
           title: "View POS",
-          url: "/merchant/view",
+          url: "/reports/merchant-pos/view",
         },
       ],
     },
@@ -73,7 +73,7 @@ const data = {
       items: [
         {
           title: "View POS",
-          url: "/branch/view",
+          url: "/reports/branch-pos/view",
         },
       ],
     },
@@ -86,6 +86,10 @@ const data = {
         {
           title: "View User",
           url: "/user/view",
+        },
+        {
+          title: "Create User",
+          url: "/user/view/create",
         },
         {
           title: "Roles",
@@ -105,19 +109,19 @@ const data = {
       items: [
         {
           title: "Merchant Report",
-          url: "/reports/import-report",
+          url: "/reports/merchant-pos/import-report",
         },
         {
           title: "View Merchant Report",
-          url: "/reports/view-report-table",
+          url: "/reports/merchant-pos/view",
         },
                 {
           title: "Branch Report",
-          url: "/reports/import-report",
+          url: "/reports/branch-pos/import-report",
         },
         {
           title: "View Branch Report",
-          url: "/reports/view-report-table",
+          url: "/reports/branch-pos/view",
         },
       ],
     },

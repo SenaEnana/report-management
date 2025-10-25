@@ -18,18 +18,18 @@ import { useState } from "react";
 import { changePasswordApi } from "@/services/AuthService";
 
 const formSchema = z.object({
-  current_password: z.string().min(8, "Password must be at least 8 characters and non empty")
+  currentPassword: z.string().min(8, "Password must be at least 8 characters and non empty")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
     }),
-  password: z.string().min(8, "Password must be at least 8 characters and non empty")
+  newPassword: z.string().min(8, "Password must be at least 8 characters and non empty")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
     }),
-  confirm_password: z.string().min(8, "Password must be at least 8 characters and non empty")
-    .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
-      message: "Invalid characters or HTML tags are not allowed",
-    }),
+  // confirm_password: z.string().min(8, "Password must be at least 8 characters and non empty")
+  //   .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
+  //     message: "Invalid characters or HTML tags are not allowed",
+  //   }),
 });
 
 export default function ChangePasswordForm() {
@@ -39,9 +39,9 @@ export default function ChangePasswordForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      current_password: "",
-      password: "",
-      confirm_password: "",
+      currentPassword: "",
+      newPassword: "",
+      // confirm_password: "",
     },
   });
 
@@ -49,9 +49,9 @@ export default function ChangePasswordForm() {
     setIsSubmitting(true);
     try {
       const success = await changePasswordApi(
-        values.current_password,
-        values.password,
-        values.confirm_password,
+        values.currentPassword,
+        values.newPassword,
+        // values.confirm_password,
       );
       if (success) {
         toast({
@@ -64,7 +64,7 @@ export default function ChangePasswordForm() {
       }
     } catch (error: any) {
       const errorMessage =
-        error.message || "Failed to create faculty. Please try again.";
+        error.message || "Failed to change password. Please try again.";
       toast({
         title: "Error",
         description: errorMessage,
@@ -80,7 +80,7 @@ export default function ChangePasswordForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="current_password"
+          name="currentPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Current Password</FormLabel>
@@ -94,7 +94,7 @@ export default function ChangePasswordForm() {
 
         <FormField
           control={form.control}
-          name="password"
+          name="newPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>New Password</FormLabel>
@@ -105,7 +105,7 @@ export default function ChangePasswordForm() {
             </FormItem>
           )}
         />
-
+{/* 
         <FormField
           control={form.control}
           name="confirm_password"
@@ -118,7 +118,7 @@ export default function ChangePasswordForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div className="flex justify-end gap-3">
           <Button

@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import PageWrapper from "@/components/layout/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ImportReport from "@/features/reports/import-report";
+import ImportForm from "@/features/reports/branch-pos/import-form";
 
-export default function InportReport() {
+export default function ImportBranchReport() {
     const navigate = useNavigate();
     return (
         <PageWrapper>
@@ -13,10 +13,10 @@ export default function InportReport() {
                     <div className="mb-8">
                         <div className="flex items-center justify-between">
                             <CardHeader>
-                                <CardTitle>Upload Report To Merge</CardTitle>
+                                <CardTitle>Upload Branch Report To Merge</CardTitle>
                             </CardHeader>
                             <Button
-                                onClick={() => navigate("/reports/view-report-table")}
+                                onClick={() => navigate("/reports/branch-pos/view")}
                                 className="bg-amber-500"
                             >
                                 View Exported Report
@@ -25,7 +25,7 @@ export default function InportReport() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <ImportReport />
+                    <ImportForm/>
                 </CardContent>
             </Card>
         </PageWrapper>

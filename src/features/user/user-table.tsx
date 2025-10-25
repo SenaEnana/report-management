@@ -28,25 +28,22 @@ import { Trash2, User } from "lucide-react";
 import { CheckboxColumn } from "@/components/common/DataTable/CheckboxColumn";
 import { PaginationControls } from "@/components/common/DataTable/PaginationControls";
 import { ActionDropdown } from "@/components/common/DataTable/ActionDropdown";
-import { fetchUsersApi, filterUserApi, getUserColumnApi, softDeleteUserApi } from "@/services/UserService";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { getGenderApi } from "@/services/GenderService";
+import { fetchUsersApi, softDeleteUserApi } from "@/services/UserService";
 
 export type User = {
     id: string;
-    name: string;
-    email: string;
+    first_name: string;
+    last_name: string;
     username: string;
-    gender_id: number;
-    password: number;
-    password_confirmation: string;
+    role: number;
+    password: string;
 };
 
 const columnsConfig = [
-    { accessorKey: "name", title: "Name" },
-    { accessorKey: "email", title: "Email" },
+    { accessorKey: "first_name", title: "First Name" },
+    { accessorKey: "last_name", title: "Last Name" },
     { accessorKey: "username", title: "Username" },
+    { accessorKey: "role", title: "Role" },
 ];
 export default function UserTable() {
     const navigate = useNavigate();
@@ -58,14 +55,6 @@ export default function UserTable() {
     const { toast } = useToast();
     const [loading, setLoading] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-    const [filters, setFilters] = useState([{ column: "", operator: "=", value: "" }]);
-    const [filterColumns, setFilterColumns] = useState<string[]>([]);
-    const [isFilterLoading, setIsFilterLoading] = useState(true);
-
-    const { data: genders } = useQuery({
-        queryKey: ["genders"],
-        queryFn: getGenderApi,
-    });
 
     const fetchData = async () => {
         setLoading(true);
@@ -78,48 +67,6 @@ export default function UserTable() {
         } finally {
             setLoading(false);
         }
-    };
-
-    useEffect(() => {
-        const fetchColumns = async () => {
-            try {
-                const columns = await getUserColumnApi();
-                setFilterColumns(columns);
-            } catch (error) {
-                console.error("Error fetching columns:", error);
-            } finally {
-                setIsFilterLoading(false);
-            }
-        };
-
-        fetchColumns();
-    }, []);
-
-    const handleApplyFilters = async () => {
-        try {
-            setLoading(true);
-            const mappedFilters = filters.map((filter) => {
-                if (filter.column === "gender_id") {
-                    const gender = genders.find((d: { id: number; name: string }) => d.name === filter.value);
-                    return { ...filter, value: gender?.id || filter.value };
-                }
-                return filter;
-            });
-
-            const { filteredData, totalItems } = await filterUserApi(pageSize, mappedFilters);
-            setData(filteredData);
-            setTotalItems(totalItems);
-        } catch (error) {
-            console.error("Error applying filters:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleCloseFilters = () => {
-        setFilters([{ column: "", operator: "=", value: "" }]);
-        fetchData();
-        setIsFilterModalOpen(false);
     };
 
     const handleSearchChange = debounce((value: string) => {
@@ -141,30 +88,6 @@ export default function UserTable() {
             navigate(`/user/view/detail/${data.id}`, { state: data });
         } catch (error) {
             console.error("Error navigating to detail view:", error);
-        }
-    };
-    const handleSyncRole = (userId: string) => {
-        console.log("Navigating with data:", data);
-        try {
-            navigate(`/user/view/sync-role?userId=${userId}`, { state: data });
-        } catch (error) {
-            console.error("Error navigating to sync role", error);
-        }
-    };
-    const handleSyncPermission = (userId: string) => {
-        console.log("Navigating with data:", data);
-        try {
-            navigate(`/user/view/sync-permission?userId=${userId}`, { state: data });
-        } catch (error) {
-            console.error("Error navigating to sync permission", error);
-        }
-    };
-    const handleAssignCampus = (userId: string) => {
-        console.log("Navigating with data:", data);
-        try {
-            navigate(`/user/view/assign-campus?userId=${userId}`, { state: data });
-        } catch (error) {
-            console.error("Error navigating to assign campus", error);
         }
     };
 
@@ -190,7 +113,7 @@ export default function UserTable() {
             }
         } catch (error: any) {
             const errorMessage =
-                error.message || "Failed to create faculty. Please try again.";
+                error.message || "Failed to delete user. Please try again.";
             toast({
                 title: "Error",
                 description: errorMessage,
@@ -227,15 +150,6 @@ export default function UserTable() {
                         }}
                         onDelete={() => {
                             handleDeleteUser(row.original);
-                        }}
-                        onSyncRole={() => {
-                            handleSyncRole(row.original.id);
-                        }}
-                        onAssignCampus={() => {
-                            handleAssignCampus(row.original.id);
-                        }}
-                        onPermission={() => {
-                            handleSyncPermission(row.original.id);
                         }}
                         type="user"
                     />
@@ -277,101 +191,6 @@ export default function UserTable() {
                         </svg>
                         Filter
                     </Button>
-                    {isFilterModalOpen && (
-                        <div className="filter-modal p-4 shadow-lg rounded-lg">
-                            {isFilterLoading ? (
-                                <div>Loading filters...</div>
-                            ) : (
-                                filters.map((filter, index) => (
-                                    <div key={index} className="flex gap-4 mb-4">
-                                        <Select
-                                            value={filter.column}
-                                            onValueChange={(value) =>
-                                                setFilters((prev) =>
-                                                    prev.map((f, i) =>
-                                                        i === index ? { ...f, column: value } : f
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            <SelectTrigger className="w-[120px]">
-                                                {filter.column || "Select Column"}
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {filterColumns.map((column) => (
-                                                    <SelectItem key={column} value={column}>
-                                                        {column}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <Select
-                                            value={filter.operator}
-                                            onValueChange={(value) =>
-                                                setFilters((prev) =>
-                                                    prev.map((f, i) =>
-                                                        i === index ? { ...f, operator: value } : f
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            <SelectTrigger className="w-[120px]">
-                                                {filter.operator}
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="=">=</SelectItem>
-                                                <SelectItem value="!=">!=</SelectItem>
-                                                <SelectItem value=">">&gt;</SelectItem>
-                                                <SelectItem value="<">&lt;</SelectItem>
-                                                <SelectItem value="like">Like</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {filter.column === "gender_id" ? (
-                                            <Select
-                                                value={filter.value}
-                                                onValueChange={(value) =>
-                                                    setFilters((prev) =>
-                                                        prev.map((f, i) =>
-                                                            i === index ? { ...f, value } : f
-                                                        )
-                                                    )
-                                                }
-                                            >
-                                                <SelectTrigger className="w-[120px]">
-                                                    {genders.find((d: { id: number; name: string }) => d.id.toString() === filter.value)?.name || "Select Gender"}
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {genders.map((gender: { id: number; name: string }) => (
-                                                        <SelectItem key={gender.id} value={gender.id.toString()}>
-                                                            {gender.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        ) : (
-                                            <Input
-                                                placeholder="Value"
-                                                value={filter.value}
-                                                onChange={(e) =>
-                                                    setFilters((prev) =>
-                                                        prev.map((f, i) =>
-                                                            i === index ? { ...f, value: e.target.value } : f
-                                                        )
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                ))
-                            )}
-                            <div className="flex justify-end gap-4">
-                                <Button variant="outline" onClick={handleCloseFilters}>
-                                    Close
-                                </Button>
-                                <Button className="bg-amber-500" onClick={handleApplyFilters}>Apply</Button>
-                            </div>
-                        </div>
-                    )}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -401,15 +220,12 @@ export default function UserTable() {
                             <DropdownMenuGroup className="w-full">
                                 <DropdownMenuItem>
                                     Excel
-                                    {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     CSV
-                                    {/* <DropdownMenuShortcut>⌘B</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     PDF
-                                    {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>

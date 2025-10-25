@@ -19,30 +19,30 @@ type Filter = {
     operator: string;
     value: string;
 }
-export const createUserApi = async (
-    name: string,
-    email: string,
-    username: string,
-    gender_id: number,
-    password: string,
-    password_confirmation: string,
-) => {
-    try {
-        const { data } = await apiClient.post("/api/users", {
-            name,
-            email,
-            username,
-            gender_id,
-            password,
-            password_confirmation,
-        });
-        return data;
-    } catch (error: any) {
-        const errorMessage =
-            error.response?.data?.message || "An unexpected error occurred";
 
-        throw new Error(errorMessage);
-    }
+export const createUserAPI = async (
+  first_name: string,
+  last_name: string,
+  username: string,
+  role: string,
+  password: string,
+) => {
+  try {
+    const { data } = await apiClient.post("/api/auth/create", {
+        first_name,
+        last_name,
+        username,
+        role,
+        password,
+    });
+    return data;
+  } catch (error: any) {
+    console.error("Error on creating password:", error.message);
+    const errorMessage =
+      error.response?.data?.message || "An unexpected error occurred";
+
+    throw new Error(errorMessage);
+  }
 };
 
 export const fetchUsersApi = async (pageIndex: number, pageSize: number, searchQuery: string) => {

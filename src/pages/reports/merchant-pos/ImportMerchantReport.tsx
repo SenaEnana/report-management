@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import PageWrapper from "@/components/layout/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ApplicantTransferForm from "@/features/applicant-transfer/applicant-transfer-form";
+import ImportForm from "@/features/reports/merchant-pos/import-form";
 
-export default function CreateApplicantTransfer() {
+export default function ImportMerchantReport() {
     const navigate = useNavigate();
     return (
         <PageWrapper>
@@ -13,19 +13,19 @@ export default function CreateApplicantTransfer() {
                     <div className="mb-8">
                         <div className="flex items-center justify-between">
                             <CardHeader>
-                                <CardTitle>Create Applicant Transfer</CardTitle>
+                                <CardTitle>Upload Merchant Report To Merge</CardTitle>
                             </CardHeader>
                             <Button
-                                onClick={() => navigate("/applicant/applicant-transfer/view")}
+                                onClick={() => navigate("/reports/merchant-pos/view")}
                                 className="bg-amber-500"
                             >
-                                View Applicant Transfer
+                                View Exported Report
                             </Button>
                         </div>
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <ApplicantTransferForm />
+                    <ImportForm />
                 </CardContent>
             </Card>
         </PageWrapper>
