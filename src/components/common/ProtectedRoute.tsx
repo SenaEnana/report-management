@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store"; // Update the path based on your project structure
+import { RootState } from "@/store/store";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,14 +9,46 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const isAuth = useSelector((state: RootState) => state.user.isAuth);
+  const token = localStorage.getItem("userData");
 
-  if (!isAuth) {
-    // Redirect to the sign-in page if not authenticated
-    return <Navigate to="/sign-in" />;
+  // Parse stored user data
+  const storedUser = token ? JSON.parse(token) : null;
+  const hasValidToken = storedUser?.token && storedUser?.expiresAt && new Date(storedUser.expiresAt) > new Date();
+
+  // If neither Redux nor localStorage says user is authenticated
+  if (!isAuth && !hasValidToken) {
+    return <Navigate to="/sign-in" replace />;
   }
 
-  // Render the children if authenticated
   return <>{children}</>;
 };
 
 export default ProtectedRoute;
+
+
+
+
+// import React from "react";
+// import { Navigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/store/store"; // Update the path based on your project structure
+
+// interface ProtectedRouteProps {
+//   children: React.ReactNode;
+// }
+
+// const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+//   const isAuth = useSelector((state: RootState) => state.user.isAuth);
+//   const token = localStorage.getItem("token");
+
+//   if (!isAuth) {
+//     // Redirect to the sign-in page if not authenticated
+//     return <Navigate to="/sign-in" />;
+//   }
+
+//   // Render the children if authenticated
+//   return <>{children}</>;
+// };
+
+// export default ProtectedRoute;
+

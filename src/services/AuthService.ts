@@ -8,6 +8,7 @@ interface SignInResponse {
   user: {
     user_id: string;
     username: string;
+    role: string;
   };
 }
 
@@ -16,7 +17,7 @@ export const signIn = async (
   password: string,
 ): Promise<SignInResponse | void> => {
   try {
-    console.log("request: ", username, password);
+    // console.log("request: ", username, password);
 
     const response = await axios.post<SignInResponse>(
       "http://172.24.111.254:5000/api/auth/login",

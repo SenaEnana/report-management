@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 // Define the shape of your user state
 interface UserState {
   username: string;
-  // name: string;
+  role: string;
   // email: string;
   loading: boolean;
   isAuth: boolean;
@@ -14,8 +14,6 @@ interface UserState {
   tokenType: string | null;
   expiresAt: string | null;
 }
-
-// Define the user data type for API responses
 
 // Define the initial state
 const loadUserDataFromLocalStorage = (): UserState | null => {
@@ -39,6 +37,7 @@ export const signInThunk = createAsyncThunk<UserState, { username: string; passw
     if (response) {
       const userDataObj: UserState = {
         username: response.user.username,
+        role: response.user.role,
         loading: false,
         error: null,
         isAuth: true,
@@ -58,7 +57,7 @@ export const signInThunk = createAsyncThunk<UserState, { username: string; passw
 // Initial state
 const initialState: UserState = loadUserDataFromLocalStorage() || {
   username: "",
-  // name: "",
+  role: "user",
   // email: "",
   loading: false,
   isAuth:false,
@@ -73,9 +72,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData(state, action: PayloadAction<UserState>) {
-      const { username, error, loading, token, tokenType, expiresAt, isAuth } = action.payload;
+      const { username, role, error, loading, token, tokenType, expiresAt, isAuth } = action.payload;
       state.username = username;
-      // state.name = name;
+      state.role = role;
       // state.email = email;
       state.loading = loading;
       state.error = error;
@@ -88,7 +87,7 @@ const userSlice = createSlice({
     },
     signOut(state) {
       state.username = "";
-      // state.name = "";
+      state.role = "";
       // state.email = "";
       state.loading = false;
       state.isAuth = false;
@@ -105,7 +104,7 @@ const userSlice = createSlice({
       .addCase(signInThunk.pending, (state) => {
         state.loading = true;
         state.username = "";
-        // state.name = "";
+        state.role = "";
         // state.email = "";
         state.error = null;
         state.isAuth = false;
@@ -116,7 +115,7 @@ const userSlice = createSlice({
       .addCase(signInThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.username = action.payload.username;
-        // state.name = action.payload.name;
+        state.role = action.payload.role;
         // state.email = action.payload.email;
         state.error = null;
         state.isAuth = true;
@@ -127,7 +126,7 @@ const userSlice = createSlice({
       .addCase(signInThunk.rejected, (state, action) => {
         state.loading = false;
         state.username = "";
-        // state.name = "";
+        state.role = "";
         // state.email = "";
         state.error = action.error.message || "Failed to fetch user";
         state.isAuth = false;

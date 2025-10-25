@@ -1,16 +1,11 @@
 import * as React from "react";
 import {
-  AudioWaveform,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
   Store,
-  PieChart,
   ChartArea,
   LayoutDashboard,
-  Users, School,
-  Trash2
+  Users,
+  School,
+  Trash2,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import {
@@ -20,162 +15,88 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-
 import nibLogo from "@/assets/svg/imageeeeu.png";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-// This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: LayoutDashboard,
-    },
+    { title: "Dashboard", url: "/", icon: LayoutDashboard },
     {
       title: "Merchant POS",
       url: "/merchant",
       icon: Store,
-      isActive: true,
-      items: [
-        {
-          title: "View POS",
-          url: "/reports/merchant-pos/view",
-        },
-      ],
+      items: [{ title: "View POS", url: "/reports/merchant-pos/view" }],
     },
-        {
+    {
       title: "Branch POS",
       url: "/branch",
       icon: School,
-      isActive: true,
-      items: [
-        {
-          title: "View POS",
-          url: "/reports/branch-pos/view",
-        },
-      ],
+      items: [{ title: "View POS", url: "/reports/branch-pos/view" }],
     },
     {
       title: "User Management",
       url: "/user",
       icon: Users,
-      isActive: true,
       items: [
-        {
-          title: "View User",
-          url: "/user/view",
-        },
-        {
-          title: "Create User",
-          url: "/user/view/create",
-        },
-        {
-          title: "Roles",
-          url: "/user/role/view",
-        },
-        {
-          title: "Settings",
-          url: "/user/settings",
-        },
+        { title: "View User", url: "/user/view" },
+        { title: "Create User", url: "/user/view/create" },
+        { title: "Roles", url: "/user/role/view" },
+        { title: "Settings", url: "/user/settings" },
       ],
     },
-
     {
       title: "Reports",
       url: "/reports",
       icon: ChartArea,
       items: [
-        {
-          title: "Merchant Report",
-          url: "/reports/merchant-pos/import-report",
-        },
-        {
-          title: "View Merchant Report",
-          url: "/reports/merchant-pos/view",
-        },
-                {
-          title: "Branch Report",
-          url: "/reports/branch-pos/import-report",
-        },
-        {
-          title: "View Branch Report",
-          url: "/reports/branch-pos/view",
-        },
+        { title: "Merchant Report", url: "/reports/merchant-pos/import-report" },
+        { title: "View Merchant Report", url: "/reports/merchant-pos/view" },
+        { title: "Branch Report", url: "/reports/branch-pos/import-report" },
+        { title: "View Branch Report", url: "/reports/branch-pos/view" },
       ],
     },
     {
       title: "Trashed",
       url: "/trashed",
       icon: Trash2,
-      isActive: true,
       items: [
-        {
-          title: "Merchant Reports",
-          url: "/trashed/academic-year",
-        },
-        {
-          title: "Branch Reports",
-          url: "/trashed/admission-type",
-        },
+        { title: "Merchant Reports", url: "/trashed/academic-year" },
+        { title: "Branch Reports", url: "/trashed/admission-type" },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const role = useSelector((state: RootState) => state.user.role);
+
+  const filteredNav = data.navMain.filter((item) => {
+    if (role === "admin") return true;
+    return !["User Management", "Trashed"].includes(item.title);
+  });
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {/* <TeamSwitcher teams={data.teams} /> */}
         <div className="flex justify-center">
           <img src={nibLogo} alt="NIB Logo" className="h-18 w-20" />
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} mainNavTitle="Menu" />
-        {/* <NavProjects projects={data.projects} /> */}
+        <NavMain items={filteredNav} mainNavTitle="Menu" />
       </SidebarContent>
-      <SidebarFooter>{/* <NavUser user={data.user} /> */}</SidebarFooter>
+      <SidebarFooter />
       <SidebarRail />
     </Sidebar>
   );
 }
+
+// const rolePermissions = {
+//   admin: ["Dashboard", "User Management", "Reports", "Trashed", "Merchant POS", "Branch POS"],
+//   user: ["Dashboard", "Reports", "Merchant POS", "Branch POS"],
+// };
+
+// const filteredNav = data.navMain.filter(item =>
+//   rolePermissions[role]?.includes(item.title)
+// );

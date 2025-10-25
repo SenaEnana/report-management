@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 function DashboardContent() {
   // const stats = [
@@ -17,6 +18,7 @@ function DashboardContent() {
 
   return (
     <main className="flex-1 flex flex-col p-6 space-y-10">
+
       {/* Top Stats Section */}
       {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((item, index) => (
@@ -60,75 +62,97 @@ function DashboardContent() {
           </motion.div>
         ))}
       </section>
-    {/* <section className="mt-10"> */}
-<div className="relative overflow-x-auto bg-amber-200">
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <Card>
+  <div className="relative overflow-x-auto">
+              <CardHeader>
+                <CardTitle className="text-center text-xl font-bold">Top Three Transaction Merchant</CardTitle>
+              </CardHeader>
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" className="px-6 py-6">
-                    Product name
+                     Terminal ID
                 </th>
                 <th scope="col" className="px-6 py-6">
-                    Color
+                     Merchant Name
                 </th>
                 <th scope="col" className="px-6 py-6">
-                    Category
+                    Branch
                 </th>
                 <th scope="col" className="px-6 py-6">
-                    Price
+                    District
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                 <th scope="row" className="px-6 py-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple MacBook Pro 17"
+                    220918390
                 </th>
                 <td className="px-6 py-6">
-                    Silver
+                    Abet Hospital POS
                 </td>
                 <td className="px-6 py-6">
-                    Laptop
+                    Addisu Gebiya
                 </td>
                 <td className="px-6 py-6">
-                    $2999
+                    SAAD
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                 <th scope="row" className="px-6 py-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Microsoft Surface Pro
+                    220937465
                 </th>
                 <td className="px-6 py-6">
-                    White
+                   Belay Teklu POS 
                 </td>
                 <td className="px-6 py-6">
-                    Laptop PC
+                    Bole Branch
                 </td>
                 <td className="px-6 py-6">
-                    $1999
+                    NAAD
                 </td>
             </tr>
             <tr className="bg-white dark:bg-gray-800">
                 <th scope="row" className="px-6 py-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Magic Mouse 2
+                    220964792
                 </th>
                 <td className="px-6 py-6">
-                    Black
+                    Sky-light Hotel POS
                 </td>
                 <td className="px-6 py-6">
-                    Accessories
+                    Bole Atlas Branch
                 </td>
                 <td className="px-6 py-6">
-                    $99
+                    WAAD
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{/* 
-      </section> */}
+      </Card>
     </main>
   );
 }
 
 export default DashboardContent;
+
+
+            // 
+            //     <CardHeader>
+            //         <div className="mb-8">
+            //             <div className="flex items-center justify-between">
+
+            //                 <Button
+            //                     onClick={() => navigate("/reports/merchant-pos/view")}
+            //                     className="bg-amber-500"
+            //                 >
+            //                     View Exported Report
+            //                 </Button>
+            //             </div>
+            //         </div>
+            //     </CardHeader>
+            //     <CardContent>
+            //         <ImportForm />
+            //     </CardContent>
+            // </Card>

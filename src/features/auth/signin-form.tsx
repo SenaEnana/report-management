@@ -46,9 +46,15 @@ const LoginForm: React.FC = () => {
   };
 
     // Use useEffect to handle redirection after successful login
+    // useEffect(() => {
+    //   if (isAuth) {
+    //     navigate("/");
+    //   }
+    // }, [isAuth, navigate]);
+
     useEffect(() => {
       if (isAuth) {
-        navigate("/");
+        navigate("/", { replace: true });
       }
     }, [isAuth, navigate]);
 
