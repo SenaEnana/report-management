@@ -1,12 +1,13 @@
-import DashboardContent from '@/components/dashboard-content';
-import PageWrapper from '../components/layout/PageWrapper';
-import { Card } from "@/components/ui/card";
 
-export default function Dashboard() {
+import PageWrapper from "@/components/layout/PageWrapper"
+import { Card } from "@/components/ui/card";
+import BranchHistory from "@/features/reports/branch-pos/branch-history";
+
+export default function BranchHistoryPage() {
     return (<>
     <PageWrapper>
         <Card className="p-3">
-            <DashboardContent />
+            <BranchHistory />
             <div className="mb-8">
             <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 m-2">

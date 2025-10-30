@@ -1,30 +1,5 @@
 import apiClient from "@/utils/ApiClient";
 import * as XLSX from "xlsx";
-interface Report {
-  id: number;
-  file: undefined;
-  created_at: string | null;
-  updated_at: string | null;
-  deleted_at: string | null;
-}
-
-export const fetchMerchants = async (pageIndex: number, pageSize: number, searchQuery: string) => {
-  try {
-
-    const response = await apiClient.get(
-      `/api/applicants?page=${pageIndex + 1}&per_page=${pageSize}&q=${searchQuery}`
-    );
-    const data = response.data.data;
-
-    return { data: data, totalItems: response.data.meta.total };
-  } catch (error: any) {
-    console.error("Error on view applicants:", error.message);
-    const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred";
-
-    throw new Error(errorMessage);
-  }
-};
 
 export const uploadMerchantReportApi = async (file: File | undefined) => {
   if (!file) throw new Error("No file selected");
@@ -99,24 +74,3 @@ export const updateExxhangeRateApi = async (
     throw new Error(errorMessage);
   }
 };
-
-
-////second correct and used for the separate download file on the other page
-// export const uploadReportApi = async (file: File | undefined) => {
-//   if (!file) throw new Error("No file selected");
-
-//   const formData = new FormData();
-//   formData.append("file", file);
-
-//   const { data } = await apiClient.post("/api/reports", formData, {
-//     headers: { "Content-Type": "multipart/form-data" },
-//     responseType: "blob", // backend sends file directly
-//   });
-
-//   // Save blob as object URL in localStorage or context
-//   const blob = new Blob([data]);
-//   const url = window.URL.createObjectURL(blob);
-//   localStorage.setItem("lastReportUrl", url);
-
-//   return true;
-// };

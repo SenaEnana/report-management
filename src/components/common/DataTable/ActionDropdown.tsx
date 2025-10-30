@@ -20,24 +20,18 @@ import {
 } from "@/components/ui/dialog";
 
 interface ActionDropdownProps {
-  onView?: () => void;
+  // onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
-  onSyncRole?: () => void;
-  onAssignCampus?: () => void;
-  onPermission?: () => void;
-  onRestore?: () => void;
+  // onRestore?: () => void;
   type?: "user" | "trash" | "default"; // context based button
 }
 
 export function ActionDropdown({
-  onView,
+  // onView,
   onEdit,
   onDelete,
-  onSyncRole,
-  onAssignCampus,
-  onPermission,
-  onRestore,
+  // onRestore,
   type = "default",
 }: ActionDropdownProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -63,10 +57,10 @@ export function ActionDropdown({
           {/* Default actions */}
           {type === "default" && (
             <>
-              <DropdownMenuItem onClick={onView}>
+              {/* <DropdownMenuItem onClick={onView}>
                 <Eye className="mr-2 h-4 w-4" />
                 View
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem onClick={onEdit}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit
@@ -84,10 +78,10 @@ export function ActionDropdown({
           {/* User-specific actions */}
           {type === "user" && (
             <>
-              <DropdownMenuItem onClick={onView}>
+              {/* <DropdownMenuItem onClick={onView}>
                 <Eye className="mr-2 h-4 w-4" />
                 View
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem onClick={onEdit}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit
@@ -99,28 +93,16 @@ export function ActionDropdown({
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onSyncRole}>
-                <NotebookPen className="mr-2 h-4 w-4" />
-                Sync Role
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onPermission}>
-                <NotebookPen className="mr-2 h-4 w-4" />
-                Permission
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onAssignCampus}>
-                <NotebookPen className="mr-2 h-4 w-4" />
-                Assign Campus
-              </DropdownMenuItem>
             </>
           )}
 
           {/* Trash-specific actions */}
-          {type === "trash" && (
+          {/* {type === "trash" && (
             <DropdownMenuItem onClick={onRestore}>
               <RefreshCcw className="mr-2 h-4 w-4" />
               Restore
             </DropdownMenuItem>
-          )}
+          )} */}
         </DropdownMenuContent>
       </DropdownMenu>
 

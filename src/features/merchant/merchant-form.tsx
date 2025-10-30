@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Form,
@@ -11,90 +10,70 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { updateFacultyApi } from "@/services/FacultyService";
+import { useState } from "react";
+import { createMerchantApi } from "@/services/MerchantService";
 
 const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least two characters")
-    .max(50, "Name must be at most 50 characters")
+  terminal_code: z.string().min(8, "Terminal code must be at least two characters").max(50, "Terminal code is too long")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
     }),
-  abbreviation: z.string().min(2, "Abbreviation must be at least two characters")
-    .max(5, "Abbreviation must be at most 5 characters")
+  merchant_name: z.string().min(2, "Merchant name must be at least two characters").max(50, "Middle name is too long")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
     }),
-  remarks: z.string()
-    .optional()
-    .or(z.literal(""))
-    .refine((value) => !/<\/?[^>]+(>|$)/.test(value || ""), {
-      message: "Invalid characters or HTML tags are not allowed",
-    }),
-})
+  branch_id: z.number().min(1, "Branch ID must be non empty").max(7, "Branch ID must be less than or equal to 7"),
+});
 
-export default function FacultyEditForm() {
-  const { id } = useParams<{ id: string }>();
-  const location = useLocation();
-  const navigate = useNavigate();
-
+export default function MerchantForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const initialData = location.state || {};
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      abbreviation: "",
-      remarks: "",
+      terminal_code: "",
+      merchant_name: "",
+      branch_id: 0,
     },
   });
 
-  useEffect(() => {
-    form.reset(initialData);
-    setLoading(false);
-  }, [id, initialData, form, toast]);
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log('Form Submitted:', values);
     setIsSubmitting(true);
+
     try {
-      const success = await updateFacultyApi(
-        id || "",
-        values.name,
-        values.abbreviation,
-        values.remarks || ""
+      const success = await createMerchantApi(
+        values.terminal_code,
+        values.merchant_name,
+        Number(values.branch_id),
       );
+
+      console.log('API Response:', success);
+
       if (success) {
         toast({
           title: "Success!",
-          description: `${values.name} faculty updated successfully`,
+          description: `${values.merchant_name} Merchant created successfully`,
         });
-        navigate("/faculty/view");
+        form.reset();
       } else {
-        throw new Error("Failed to update faculty");
+        throw new Error("Failed to create merchant");
       }
     } catch (error: any) {
-      const errorMessage =
-        error.message || "Failed to create faculty. Please try again.";
+      console.error("API Error:", error.response?.data || error.message);
       toast({
         title: "Error",
-        description: errorMessage,
+        description: error.response?.data?.message || "Failed to create merchant. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
     }
-  }
-
-  if (loading) {
-    return <div>Loading...</div>;
   }
 
   return (
@@ -103,12 +82,12 @@ export default function FacultyEditForm() {
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="name"
+            name="terminal_code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Faculty Name</FormLabel>
+                <FormLabel>Terminal Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="faculty name" {...field} />
+                  <Input placeholder="Terminal code" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,27 +95,33 @@ export default function FacultyEditForm() {
           />
           <FormField
             control={form.control}
-            name="abbreviation"
+            name="merchant_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Abbreviation</FormLabel>
+                <FormLabel>Merchant Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="abbreviation" {...field} />
+                  <Input placeholder="Merchant Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="remarks"
+            name="branch_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Remark</FormLabel>
+                <FormLabel>Branch ID</FormLabel>
                 <FormControl>
-                  <Input placeholder="remark" {...field} />
+                  <Input
+                    placeholder="0"
+                    {...field}
+                    value={field.value?.toString()}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -147,7 +132,7 @@ export default function FacultyEditForm() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate("/faculty/view")}
+            onClick={() => form.reset()}
             disabled={isSubmitting}
           >
             Cancel
@@ -156,8 +141,9 @@ export default function FacultyEditForm() {
             type="submit"
             className="bg-amber-500"
             disabled={isSubmitting}
+          // disabled={isSubmitting || !form.formState.isValid} 
           >
-            {isSubmitting ? "Updating..." : "Update"}
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </form>

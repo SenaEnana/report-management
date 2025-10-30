@@ -26,13 +26,20 @@ const data = {
       title: "Merchant POS",
       url: "/merchant",
       icon: Store,
-      items: [{ title: "View POS", url: "/reports/merchant-pos/view" }],
+      items: [
+        { title: "View POS", url: "/reports/merchant-pos/view" },
+        { title: "Merchant History", url: "/reports/merchant-pos/merchant-history" }
+      ],
     },
     {
       title: "Branch POS",
       url: "/branch",
       icon: School,
-      items: [{ title: "View POS", url: "/reports/branch-pos/view" }],
+      items: [
+        { title: "View POS", url: "/reports/branch-pos/view" },
+        { title: "Branch History", url: "/reports/branch-pos/branch-history" }
+
+      ],
     },
     {
       title: "User Management",
@@ -43,6 +50,15 @@ const data = {
         { title: "Create User", url: "/user/view/create" },
         { title: "Roles", url: "/user/role/view" },
         { title: "Settings", url: "/user/settings" },
+      ],
+    },
+        {
+      title: "Merchant Management",
+      url: "/merchant",
+      icon: Users,
+      items: [
+        { title: "View Merchant", url: "/merchant/view" },
+        { title: "Create Merchant", url: "/merchant/view/create" },
       ],
     },
     {

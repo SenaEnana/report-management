@@ -22,29 +22,30 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { User } from "lucide-react";
 import { CheckboxColumn } from "@/components/common/DataTable/CheckboxColumn";
 import { PaginationControls } from "@/components/common/DataTable/PaginationControls";
 import { ActionDropdown } from "@/components/common/DataTable/ActionDropdown";
-import { fetchUsersApi, softDeleteUserApi } from "@/services/UserService";
+import { fetchTerminalApi, softDeleteMerchantApi } from "@/services/MerchantService";
 
-export type User = {
+export type Merchant = {
     id: string;
-    first_name: string;
-    last_name: string;
-    username: string;
-    role: string;
+    merchant_name: string;
+    terminal_code: string;
+    branch_name: string;
+    district_name: string;
+    grand_total: number;
 };
 
 const columnsConfig = [
-    { accessorKey: "first_name", title: "First Name" },
-    { accessorKey: "last_name", title: "Last Name" },
-    { accessorKey: "username", title: "Username" },
-    { accessorKey: "role", title: "Role" },
+    { accessorKey: "merchant_name", title: "Merchant Name" },
+    { accessorKey: "terminal_code", title: "Terminal Code" },
+    { accessorKey: "branch_name", title: "Branch Name" },
+    { accessorKey: "district_name", title: "District Name" },
+    { accessorKey: "grand_total", title: "Grand Total" },    
 ];
-export default function UserTable() {
+export default function MerchantTable() {
     const navigate = useNavigate();
-    const [data, setData] = useState<User[]>([]);
+    const [data, setData] = useState<Merchant[]>([]);
     const [totalItems, setTotalItems] = useState(0);
     const [pageIndex, setPageIndex] = useState(0);
     const [pageSize] = useState(10);
@@ -55,67 +56,52 @@ export default function UserTable() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetchUsersApi();
+            const response = await fetchTerminalApi();
             setData(response.data);
             setTotalItems(response.totalItems);
         } catch (error) {
-            console.error("Error fetching user:", error);
+            console.error("Error fetching terminals:", error);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleEditUser = (data: any) => {
+    const handleEditTerminal = (data: any) => {
         try {
             console.log("data", data);
-            console.log("the id fetched from the data is ", data.user_id);
-            navigate(`/user/view/edit/${data.user_id}`, { state: data });
+            console.log("the id fetched from the data is ", data.terminal_id);
+            navigate(`/merchant/view/edit/${data.terminal_id}`, { state: data });
         } catch (error) { }
     };
 
-    const handleDeleteUser = async (data: any) => {
+    const handleDeleteTerminal = async (data: any) => {
         try {
-            // console.log("data", data.user_id);
-            const userId = data.user_id;
-            const isSoftDeleted = await softDeleteUserApi(userId);
-            // if (isSoftDeleted) {
-            //     setData((prevData) => prevData.filter((item) => item.id !== userId));
-            //     setTotalItems((prevTotal) => prevTotal - 1);
-            //     toast({
-            //         title: "Success!",
-            //         description: `${data.username} user deleted!`,
-            //     });
-
-            // if (isSoftDeleted) {
-            //     await fetchData(); // re-fetch fresh data from backend
-            //     toast({
-            //         title: "Success!",
-            //         description: `${data.username} user deleted!`,
-            //     });
+            console.log("data", data.terminal_id);
+            console.log("data from the response is", data);
+            const terminalId = data.terminal_id;
+            const isSoftDeleted = await softDeleteMerchantApi(terminalId);
 
             if (isSoftDeleted) {
-                // instantly update UI
-                setData((prevData) => prevData.filter((item) => item.id !== userId));
+                setData((prevData) => prevData.filter((item) => item.id !== terminalId));
                 setTotalItems((prevTotal) => prevTotal - 1);
 
                 toast({
                     title: "Success!",
-                    description: `${data.username} user deleted!`,
+                    description: `${data.merchant_name} merchant deleted!`,
                 });
-
                 // refresh table silently
                 fetchData();
 
             } else {
                 toast({
                     title: "Error",
-                    description: "Failed to delete user. Please try again.",
+                    description: "Failed to delete terminal. Please try again.",
                     variant: "destructive",
                 });
             }
         } catch (error: any) {
             const errorMessage =
-                error.message || "Failed to delete user. Please try again.";
+                error.message || "Failed to delete terminal. Please try again.";
             toast({
                 title: "Error",
                 description: errorMessage,
@@ -148,10 +134,10 @@ export default function UserTable() {
                         //     handleViewUser(row.original);
                         // }}
                         onEdit={() => {
-                            handleEditUser(row.original);
+                            handleEditTerminal(row.original);
                         }}
                         onDelete={() => {
-                            handleDeleteUser(row.original);
+                            handleDeleteTerminal(row.original);
                         }}
                         type="user"
                     />

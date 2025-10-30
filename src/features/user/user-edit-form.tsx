@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
     Form,
@@ -16,47 +16,25 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { updateUserApi } from "@/services/UserService";
-import { useQuery } from "@tanstack/react-query";
-import { getGenderApi } from "@/services/GenderService";
-import {
-    Command,
-    CommandInput,
-    CommandList,
-    CommandGroup,
-    CommandItem,
-    CommandEmpty,
-} from "@/components/ui/command";
-import {
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-} from "@/components/ui/popover";
-import { ChevronsUpDown, Check } from "lucide-react";
 
 const formSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters").max(255, "Name is too long")
+    first_name: z.string().min(2, "Name must be at least 2 characters").max(15, "Name is too long")
         .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
             message: "Invalid characters or HTML tags are not allowed",
         }),
-    email: z.string()
-        .min(1, "Email must be non-empty")
-        .max(255, "Email is too long")
-        .email("Invalid email format")
+    last_name: z.string().min(2, "Name must be at least 2 characters").max(15, "Name is too long")
+        .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
+            message: "Invalid characters or HTML tags are not allowed",
+        }),        
+    username: z.string().min(2, "Username must be at least 2 characters").max(15, "Username is too long")
         .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
             message: "Invalid characters or HTML tags are not allowed",
         }),
-    username: z.string().min(2, "Username must be at least 2 characters").max(255, "Username is too long")
+    role: z.string().min(2, "Role must be at least 2 characters").max(15, "Name is too long")
         .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
             message: "Invalid characters or HTML tags are not allowed",
-        }),
-    gender_id: z
-        .number({ invalid_type_error: "Gender is required" })
-        .min(1, "Gender is required"),
+        }),  
     password: z.string().min(8, "Password must be at least 8 characters")
-        .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
-            message: "Invalid characters or HTML tags are not allowed",
-        }),
-    password_confirmation: z.string().min(8, "Password must be at least 8 characters")
         .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
             message: "Invalid characters or HTML tags are not allowed",
         }),
@@ -74,18 +52,12 @@ export default function UserEditForm() {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            email: "",
+            first_name: "",
+            last_name: "",
             username: "",
-            gender_id: 0,
+            role: "",
             password: "",
-            password_confirmation: "",
         },
-    });
-
-    const { data: genders, isLoading: gendersLoading } = useQuery({
-        queryKey: ["genders"],
-        queryFn: getGenderApi,
     });
 
     useEffect(() => {
@@ -98,17 +70,16 @@ export default function UserEditForm() {
         try {
             const success = await updateUserApi(
                 id || "",
-                values.name,
-                values.email,
+                values.first_name,
+                values.last_name,
                 values.username,
-                values.gender_id,
+                values.role,
                 values.password,
-                values.password_confirmation
             );
             if (success) {
                 toast({
                     title: "Success!",
-                    description: `${values.name} user updated successfully`,
+                    description: `${values.username} user updated successfully`,
                 });
                 navigate("/user/view");
             } else {
@@ -116,7 +87,7 @@ export default function UserEditForm() {
             }
         } catch (error: any) {
             const errorMessage =
-                error.message || "Failed to create faculty. Please try again.";
+                error.message || "Failed to update user. Please try again.";
             toast({
                 title: "Error",
                 description: errorMessage,
@@ -130,64 +101,18 @@ export default function UserEditForm() {
         return <div>Loading...</div>;
     }
 
-    const renderDropdown = (field: any, data: any, loading: boolean, label: string) => (
-        <FormItem>
-            <FormLabel>{label}</FormLabel>
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        className="w-full justify-between text-left font-light"
-                    >
-                        {field.value
-                            ? data?.find(
-                                (item: { id: number; name?: string; year?: string }) => String(item.id) === field.value.toString()
-                            )?.[label === "Batch Year" ? "year" : "name"] || ""
-                            : loading
-                                ? `Loading ${label.toLowerCase()}...`
-                                : `Select a ${label.toLowerCase()}`}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-0">
-                    <Command>
-                        <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
-                        <CommandList>
-                            <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
-                            <CommandGroup>
-                                {data?.map((item: { id: number; name?: string; year?: string }) => (
-                                    <CommandItem
-                                        key={item.id}
-                                        onSelect={() => field.onChange(Number(item.id))}
-                                    >
-                                        {item[label === "Batch Year" ? "year" : "name"]}
-                                        {field.value === item.id && (
-                                            <Check className="ml-auto h-4 w-4 opacity-100" />
-                                        )}
-                                    </CommandItem>
-                                ))}
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-                </PopoverContent>
-            </Popover>
-            <FormMessage />
-        </FormItem>
-    );
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <div className="grid grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="first_name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Name</FormLabel>
+                                <FormLabel>First Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="name" {...field} />
+                                    <Input placeholder="first name" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -196,12 +121,12 @@ export default function UserEditForm() {
 
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="last_name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>Last Name</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input placeholder="last name" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -216,18 +141,24 @@ export default function UserEditForm() {
                             <FormItem>
                                 <FormLabel>Username</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input {...field} placeholder="username" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Controller
-                        name="gender_id"
+                    <FormField
                         control={form.control}
-                        render={({ field }) =>
-                            renderDropdown(field, genders, gendersLoading, "Gender")
-                        }
+                        name="role"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Role</FormLabel>
+                                <FormControl>
+                                    <Input {...field} placeholder="role"/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -241,19 +172,6 @@ export default function UserEditForm() {
                                     <Input
                                         {...field}
                                     />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password_confirmation"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Confirm Password</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
