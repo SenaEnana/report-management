@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
-import { branchHistoryApi } from "@/services/BranchService";
+import { branchHistoryApi, downloadAllBranchHistoryApi } from "@/services/BranchService";
 
 function BranchHistory() {
   const [branchHistory, setBranchHistory] = useState<any[]>([]);
@@ -43,13 +43,7 @@ function BranchHistory() {
             </CardTitle>
           </CardHeader>
             <Button className="bg-amber-500 float-end m-2"
-            onClick={() => {
-              const link = document.createElement("a");
-              link.href = reportUrl;
-              link.setAttribute("download", "branch_transaction_history_2025-10-29.xlsx");
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
+            onClick={() => { downloadAllBranchHistoryApi()
             }}
           >
             <Download className="mr-2 h-4 w-4" /> Download

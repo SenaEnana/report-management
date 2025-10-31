@@ -1,10 +1,10 @@
 import * as React from "react";
 import {
-  Store,
+  // Store,
   ChartArea,
   LayoutDashboard,
   Users,
-  School,
+  // School,
   Trash2,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
@@ -22,32 +22,32 @@ import { RootState } from "@/store/store";
 const data = {
   navMain: [
     { title: "Dashboard", url: "/", icon: LayoutDashboard },
-    {
-      title: "Merchant POS",
-      url: "/merchant",
-      icon: Store,
-      items: [
-        { title: "View POS", url: "/reports/merchant-pos/view" },
-        { title: "Merchant History", url: "/reports/merchant-pos/merchant-history" }
-      ],
-    },
-    {
-      title: "Branch POS",
-      url: "/branch",
-      icon: School,
-      items: [
-        { title: "View POS", url: "/reports/branch-pos/view" },
-        { title: "Branch History", url: "/reports/branch-pos/branch-history" }
+    // {
+    //   title: "Merchant POS",
+    //   url: "/merchant",
+    //   icon: Store,
+    //   items: [
+    //     { title: "View POS", url: "/reports/merchant-pos/view" },
 
-      ],
-    },
+    //   ],
+    // },
+    // {
+    //   title: "Branch POS",
+    //   url: "/branch",
+    //   icon: School,
+    //   items: [
+    //     { title: "View POS", url: "/reports/branch-pos/view" },
+        
+
+    //   ],
+    // },
     {
       title: "User Management",
       url: "/user",
       icon: Users,
       items: [
         { title: "View User", url: "/user/view" },
-        { title: "Create User", url: "/user/view/create" },
+        { title: "Create User", url: "/user/create" },
         { title: "Roles", url: "/user/role/view" },
         { title: "Settings", url: "/user/settings" },
       ],
@@ -66,10 +66,12 @@ const data = {
       url: "/reports",
       icon: ChartArea,
       items: [
-        { title: "Merchant Report", url: "/reports/merchant-pos/import-report" },
-        { title: "View Merchant Report", url: "/reports/merchant-pos/view" },
-        { title: "Branch Report", url: "/reports/branch-pos/import-report" },
+        { title: "Import Merchant Report", url: "/reports/merchant-pos/import-report" },
+        { title: "View Merchant Report", url: "/reports/merchant-pos/view" },        
+        { title: "Import Branch Report", url: "/reports/branch-pos/import-report" },
         { title: "View Branch Report", url: "/reports/branch-pos/view" },
+        { title: "Merchant History", url: "/reports/merchant-pos/merchant-history" },
+        { title: "Branch History", url: "/reports/branch-pos/branch-history" }
       ],
     },
     {

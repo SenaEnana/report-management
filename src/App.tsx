@@ -18,6 +18,7 @@ import BranchHistoryPage from "./pages/reports/branch-pos/BranchHistoryPage";
 import EditUser from "./pages/user/EditUser";
 import CreateMerchant from "./pages/merchant/CreateMerchant";
 import ViewMerchant from "./pages/merchant/ViewMerchant";
+import EditMerchant from "./pages/merchant/EditMerchant";
   
   function App() {
   const queryClient = new QueryClient();
@@ -47,7 +48,7 @@ import ViewMerchant from "./pages/merchant/ViewMerchant";
                }
              />
             <Route
-               path="user/view/create"
+               path="user/create"
                element={
                  <ProtectedRoute>
                    <CreateUser />
@@ -147,6 +148,14 @@ import ViewMerchant from "./pages/merchant/ViewMerchant";
                element={
                  <ProtectedRoute>
                    <ViewMerchant/>
+                 </ProtectedRoute>
+               }
+             />
+              <Route
+               path="/merchant/view/edit/:id"
+               element={
+                 <ProtectedRoute>
+                   <EditMerchant/>
                  </ProtectedRoute>
                }
              />

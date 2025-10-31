@@ -33,7 +33,7 @@ export const uploadBranchReportApi = async (file: File | undefined) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const { data } = await apiClient.post("/api/reports/branch ", formData, {
+  const { data } = await apiClient.post("/api/reports/branch", formData, {
     headers: { "Content-Type": "multipart/form-data" },
     responseType: "blob",
   });
@@ -72,5 +72,34 @@ export const updateExxhangeRateApi = async (
       error.response?.data?.message || "An unexpected error occurred";
 
     throw new Error(errorMessage);
+  }
+};
+
+
+export const downloadMergedBranchApi = async () => {
+  try {
+    const response = await apiClient.get("/api/reports/branch", {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    const fileName = `daily_merchant_pos_performance__${new Date()
+      .toISOString()
+      .split("T")[0]}.xlsx`;
+
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error: any) {
+    console.error("Error downloading merged branch report:", error);
+    const message =
+      error.response?.data?.message ||
+      "Failed to download merged branch report.";
+    throw new Error(message);
   }
 };

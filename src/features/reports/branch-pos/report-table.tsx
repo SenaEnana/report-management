@@ -41,11 +41,6 @@ const columnsConfig: {
   { accessorKey: "grand_total", title: "Grand Total" },   
 ];
 
-    //   mergedData.push({
-    //     mc_txn: item["MC_TXN"] || 0,
-    //     cup_txn: item["CUP_TXN"] || 0,
-    //     total_txn: item["TOTAL_TXN"] || 0,
-
 
 export default function ReportTable() {
   const [data, setData] = useState<ReportRow[]>([]);
@@ -69,7 +64,7 @@ export default function ReportTable() {
 
   return (
     <div className="w-full">
-      <h1 className="text-xl font-bold mb-4">Merged Report</h1>
+      <h1 className="text-xl font-bold mb-4">Merged Branch Report</h1>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

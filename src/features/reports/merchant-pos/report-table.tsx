@@ -55,7 +55,7 @@ export default function ReportTable() {
 
   return (
     <div className="w-full">
-      <h1 className="text-xl font-bold mb-4">Merged Report</h1>
+      <h1 className="text-xl font-bold mb-4">Merged Merchant Report</h1>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

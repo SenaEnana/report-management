@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchMerchantsApi } from "@/services/MerchantService";
+import { downloadTopMerchantApi, fetchMerchantsApi } from "@/services/MerchantService";
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
 
@@ -70,13 +70,7 @@ function DashboardContent() {
             </CardTitle>
           </CardHeader>
             <Button className="bg-amber-500 float-end m-2"
-            onClick={() => {
-              const link = document.createElement("a");
-              link.href = reportUrl;
-              link.setAttribute("download", "top_10_merchants_2025-10-27.xlsx");
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
+            onClick={() => { downloadTopMerchantApi()
             }}
           >
             <Download className="mr-2 h-4 w-4" /> Download

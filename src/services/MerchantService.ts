@@ -36,13 +36,13 @@ export const fetchTerminalApi = async () => {
 export const updateMerchantApi = async (
     id: string,
     merchant_name: string,
-    terminal_code: string,
+    // terminal_code: string,
     branch_id: number,
 ) => {
     try {
         const { data } = await apiClient.put(`/api/terminals/${id}`, {
             merchant_name,
-            terminal_code,
+            // terminal_code,
             branch_id,
         });
         return data;
@@ -100,6 +100,34 @@ export const fetchMerchantsApi = async (pageIndex: number, pageSize: number, sea
   }
 };
 
+export const downloadTopMerchantApi = async () => {
+  try {
+    const response = await apiClient.get("/api/export/top-merchants", {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    const fileName = `top_10_merchants_${new Date()
+      .toISOString()
+      .split("T")[0]}.xlsx`;
+
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error: any) {
+    console.error("Error downloading top ten merchants:", error);
+    const message =
+      error.response?.data?.message ||
+      "Failed to download top ten merchants.";
+    throw new Error(message);
+  }
+};
+
 export const merchantHistoryApi = async (pageIndex: number, pageSize: number, searchQuery: string) => {
   try {
     const response = await apiClient.get(
@@ -127,3 +155,65 @@ export const merchantHistoryApi = async (pageIndex: number, pageSize: number, se
     throw new Error(errorMessage);
   }
 };
+
+
+export const downloadAllMerchantHistoryApi = async () => {
+  try {
+    const response = await apiClient.get("/api/export/merchant-history", {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    const fileName = `merchant_transaction_history_${new Date()
+      .toISOString()
+      .split("T")[0]}.xlsx`;
+
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error: any) {
+    console.error("Error downloading all merchant history:", error);
+    const message =
+      error.response?.data?.message ||
+      "Failed to download full merchant history.";
+    throw new Error(message);
+  }
+};
+
+export const downloadFilteredMerchantHistoryApi = async (
+  terminal_code: string,
+  from: string,
+  to: string
+) => {
+  try {
+    const response = await apiClient.get(
+      `/api/export/merchant-history/date`,
+      {
+        params: { terminal_code, from, to },
+        responseType: "blob", 
+      }
+    );
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    const fileName = `merchant_history_${terminal_code}_${from}_to_${to}.xlsx`;
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    return true;
+  } catch (error: any) {
+    console.error("Error downloading merchant history by date:", error);
+    const message =
+      error.response?.data?.message || "Failed to download merchant history.";
+    throw new Error(message);
+  }
+};
+

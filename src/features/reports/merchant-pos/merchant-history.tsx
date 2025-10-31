@@ -1,13 +1,37 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import {merchantHistoryApi } from "@/services/MerchantService";
+import {downloadAllMerchantHistoryApi, downloadFilteredMerchantHistoryApi, merchantHistoryApi } from "@/services/MerchantService";
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+
+export type Merchant = {
+  id: string;
+  terminal_name: string;
+  branch: string;
+  district: string;
+  sum_local_txn: number;
+  sum_local_txn_amnt: number;
+  sum_visa_txn: string;
+  sum_visa_amount: number;
+  sum_mc_txn: number;
+  sum_mc_amount: number;
+  sum_cup_txn: string;
+  sum_cup_amount: number;
+  sum_total_txn: number;
+  sum_total_amount: number;
+  transaction_date: Date;
+};
 
 function MerchantHistory() {
   const [merchantsHistory, setMerchantsHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [terminalCode, setTerminalCode] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState(""); 
+  const { toast } = useToast();
 
   useEffect(() => {
     const loadMerchants = async () => {
@@ -29,6 +53,44 @@ function MerchantHistory() {
     if (url) setReportUrl(url);
   }, []);
 
+//   const handleDownloadByDate = async () => {
+//   if (!terminalCode || !fromDate || !toDate) {
+//     alert("Please fill terminal code, from date, and to date");
+//     return;
+//   }
+//   try {
+//     // Construct the API URL
+//     const url = `http://172.24.111.254:5000/api/export/merchant-history/date?terminal_code=${terminalCode}&from=${fromDate}&to=${toDate}`;
+
+//     // Create a hidden link and trigger download
+//     const link = document.createElement("a");
+//     link.href = url;
+//     link.setAttribute(
+//       "download",
+//       `merchant_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
+//     );
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+//   } catch (error) {
+//     console.error("Error downloading file:", error);
+//     alert("Error downloading merchant history. Check console for details.");
+//   }
+// };
+        const handleDownloadByDate = async () => {
+          if (!terminalCode || !fromDate || !toDate) {
+            alert("Please fill terminal code, from date, and to date");
+            return;
+          }
+
+          try {
+            await downloadFilteredMerchantHistoryApi(terminalCode, fromDate, toDate);
+          } catch (error) {
+            console.error(error);
+            alert("Error downloading merchant history. Check console for details.");
+          }
+        };
+
   if (!reportUrl) {
     return <p>No data available.</p>;
   }
@@ -41,18 +103,35 @@ function MerchantHistory() {
               Merchants Transaction History 
             </CardTitle>
           </CardHeader>
-            <Button className="bg-amber-500 float-end m-2"
-            onClick={() => {
-              const link = document.createElement("a");
-              link.href = reportUrl;
-              link.setAttribute("download", "merchant_transaction_history_2025-10-29.xlsx");
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
-            }}
-          >
-            <Download className="mr-2 h-4 w-4" /> Download
-          </Button>
+          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg mb-4">
+            <Input
+              placeholder="Terminal Code"
+              value={terminalCode}
+              onChange={(e) => setTerminalCode(e.target.value)}
+              className="w-[180px]"
+            />
+            <Input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
+            <Input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
+            <Button className="bg-amber-500" onClick={handleDownloadByDate}>
+              <Download className="mr-2 h-4 w-4" /> Download by Date
+            </Button>
+          </div>
+            <Button
+              className="bg-gray-500 float-end m-2"
+              onClick={() => { downloadAllMerchantHistoryApi()
+              }}
+            >
+              <Download className="mr-2 h-4 w-4" /> Download All
+            </Button>
+
           {loading ? (
             <p className="text-center py-4 text-gray-500">Loading...</p>
           ) : error ? (
@@ -81,7 +160,7 @@ function MerchantHistory() {
                   </th>    
                   {/* <th scope="col" className="px-6 py-6">
                     VISA Txns
-                  </th>                                                       */}
+                  </th>  */}
                   <th scope="col" className="px-6 py-6">
                     VISA Amount $
                   </th>  
@@ -93,7 +172,7 @@ function MerchantHistory() {
                   </th> 
                   {/* <th scope="col" className="px-6 py-6">
                     CUP Txns
-                  </th>                                                         */}
+                  </th> */}
                   <th scope="col" className="px-6 py-6">
                     CUP Amount $
                   </th>
@@ -101,6 +180,9 @@ function MerchantHistory() {
                    Total Txns
                   </th>  */}
                   <th scope="col" className="px-6 py-6">
+                   Sum Total Txn
+                  </th> 
+                   <th scope="col" className="px-6 py-6">
                    Sum Total Amount
                   </th> 
                   {/* <th scope="col" className="px-6 py-6">
