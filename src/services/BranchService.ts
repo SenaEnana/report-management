@@ -1,6 +1,71 @@
 import apiClient from "@/utils/ApiClient";
 import * as XLSX from "xlsx";
 
+export const createBranchAPI = async (
+  branch_name: string,
+  district_id: number,
+) => {
+  try {
+    const { data } = await apiClient.post("/api/branches", {
+        branch_name,
+        district_id
+    });
+    return data;
+  } catch (error: any) {
+    console.error("Error on creating branch:", error.message);
+    const errorMessage =
+      error.response?.data?.message || "An unexpected error occurred";
+
+    throw new Error(errorMessage);
+  }
+};
+
+export const fetchBranchApi = async () => {
+  try {
+    const response = await apiClient.get("/api/branches");
+    const data = response.data; // Directly get the array
+    return { data, totalItems: data.length };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(errorMessage);
+  }
+};
+
+export const updateBranchApi = async (
+    branch_id: string,
+    branch_name: string,
+    district_id: number,
+) => {
+    try {
+        const { data } = await apiClient.put(`/api/branches/${branch_id}`, {
+            branch_name,
+            district_id,
+        });
+        return data;
+    } catch (error: any) {
+        const errorMessage =
+            error.response?.data?.message || "An unexpected error occurred";
+
+        throw new Error(errorMessage);
+    }
+};
+
+export const softDeleteBranchApi = async (branch_id: string) => {
+    try {
+        const response = await apiClient.delete(`/api/branches/${branch_id}`);
+        if (response.status === 200 || response.status === 204) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error: any) {
+        const errorMessage =
+            error.response?.data?.message || "An unexpected error occurred";
+
+        throw new Error(errorMessage);
+    }
+};
+
 export const branchHistoryApi = async (pageIndex: number, pageSize: number, searchQuery: string) => {
   try {
     const response = await apiClient.get(

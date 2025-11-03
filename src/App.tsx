@@ -19,6 +19,12 @@ import EditUser from "./pages/user/EditUser";
 import CreateMerchant from "./pages/merchant/CreateMerchant";
 import ViewMerchant from "./pages/merchant/ViewMerchant";
 import EditMerchant from "./pages/merchant/EditMerchant";
+import CreateBranch from "./pages/branch/CreateBranch";
+import EditBranch from "./pages/branch/EditBranch";
+import ViewBranch from "./pages/branch/ViewBranch";
+import CreateDistrict from "./pages/district/CreateDistrict";
+import ViewDistrict from "./pages/district/ViewDistrict";
+import EditDistrict from "./pages/district/EditDistrict";
   
   function App() {
   const queryClient = new QueryClient();
@@ -136,7 +142,7 @@ import EditMerchant from "./pages/merchant/EditMerchant";
                }
              />
               <Route
-               path="/merchant/view/create"
+               path="/merchant/create"
                element={
                  <ProtectedRoute>
                    <CreateMerchant/>
@@ -159,6 +165,54 @@ import EditMerchant from "./pages/merchant/EditMerchant";
                  </ProtectedRoute>
                }
              />
+              <Route
+               path="/branch/create"
+               element={
+                 <ProtectedRoute>
+                   <CreateBranch/>
+                 </ProtectedRoute>
+               }
+             />
+              <Route
+               path="/branch/view"
+               element={
+                 <ProtectedRoute>
+                   <ViewBranch/>
+                 </ProtectedRoute>
+               }
+             />   
+              <Route
+               path="/branch/view/edit/:id"
+               element={
+                 <ProtectedRoute>
+                   <EditBranch/>
+                 </ProtectedRoute>
+               }
+             />  
+              <Route
+               path="/district/create"
+               element={
+                 <ProtectedRoute>
+                   <CreateDistrict/>
+                 </ProtectedRoute>
+               }
+             />    
+              <Route
+               path="/district/view"
+               element={
+                 <ProtectedRoute>
+                   <ViewDistrict/>
+                 </ProtectedRoute>
+               }
+             />  
+              <Route
+               path="/district/view/edit/:id"
+               element={
+                 <ProtectedRoute>
+                   <EditDistrict/>
+                 </ProtectedRoute>
+               }
+             />                                                             
            </Routes>
          </Router>
        </QueryClientProvider>

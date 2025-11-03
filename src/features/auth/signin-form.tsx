@@ -1,35 +1,30 @@
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm  } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/store/store"; // Import the store types
+import { RootState, AppDispatch } from "@/store/store"; 
 import { signInThunk } from '@/store/slices/user-slice';
 import * as yup from "yup";
 import niblogo from "@/assets/img/imageeeeu.png";
 import { useNavigate } from "react-router-dom";
 
-
-// Define Yup validation schema
 const schema = yup.object({
   username: yup.string().required("Username is required"),
   password: yup
     .string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
-  // rememberMe: yup.boolean(),
 });
 
 interface LoginFormInputs {
   username: string,
   password: string;
-  // rememberMe?: boolean;
 }
 
 const LoginForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    // control,
     formState: { errors },
   } = useForm<LoginFormInputs>({
     resolver: yupResolver(schema),
@@ -71,7 +66,6 @@ const LoginForm: React.FC = () => {
         </h1>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Email Field */}
         <div>
           <label
             htmlFor="username"
@@ -163,36 +157,13 @@ const LoginForm: React.FC = () => {
             )}
           </div>
         </div>
-
-         {/* Remember Me Checkbox */} 
-       {/* <div className="flex items-center">
-          {/* <Controller
-            name="rememberMe"
-            control={control}
-            defaultValue={false}
-            render={({ field }) => (
-              <input
-                type="checkbox"
-                id="rememberMe"
-                checked={field.value || false} // Use `checked` instead of `value`
-                onChange={field.onChange} // Pass the handler from Controller
-                className="h-4 w-4 text-amber-500 focus:ring-amber-500 border-gray-300 rounded"
-              />
-            )}
-          />
-
-          <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700">
-            Keep me logged in
-          </label>
-        </div> */}
-
         {/* Submit Button */}
         <button
           type="submit"
           className={`w-full py-2 px-4 text-white rounded-md font-medium focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 ${
             loading
               ? "bg-gray-500 cursor-not-allowed"
-              : "bg-amber-700 hover:bg-amber-800"
+              : "bg-amber-500 hover:bg-amber-400"
           }`}
           disabled={loading}
         >

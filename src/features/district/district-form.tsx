@@ -15,30 +15,23 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { createMerchantApi } from "@/services/MerchantService";
+import { createDistrictAPI } from "@/services/DistrictService";
 
 const formSchema = z.object({
-  terminal_code: z.string().min(8, "Terminal code must be at least two characters").max(50, "Terminal code is too long")
+district_name: z.string().min(2, "District name must be at least two characters").max(50, "District name is too long")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
     }),
-  merchant_name: z.string().min(2, "Merchant name must be at least two characters").max(50, "Merchant name is too long")
-    .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
-      message: "Invalid characters or HTML tags are not allowed",
-    }),
-  branch_id: z.number().min(1, "Branch ID must be non empty").max(7, "Branch ID must be less than or equal to 7"),
 });
 
-export default function MerchantForm() {
+export default function DistrictForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      terminal_code: "",
-      merchant_name: "",
-      branch_id: 0,
+      district_name: "",
     },
   });
 
@@ -47,10 +40,8 @@ export default function MerchantForm() {
     setIsSubmitting(true);
 
     try {
-      const success = await createMerchantApi(
-        values.terminal_code,
-        values.merchant_name,
-        Number(values.branch_id),
+      const success = await createDistrictAPI(
+        values.district_name,
       );
 
       console.log('API Response:', success);
@@ -58,17 +49,17 @@ export default function MerchantForm() {
       if (success) {
         toast({
           title: "Success!",
-          description: `${values.merchant_name} Merchant created successfully`,
+          description: `${values.district_name} District created successfully`,
         });
         form.reset();
       } else {
-        throw new Error("Failed to create merchant");
+        throw new Error("Failed to create district");
       }
     } catch (error: any) {
       console.error("API Error:", error.response?.data || error.message);
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to create merchant. Please try again.",
+        description: error.response?.data?.message || "Failed to create district. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -82,46 +73,12 @@ export default function MerchantForm() {
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="terminal_code"
+            name="district_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Terminal Code</FormLabel>
+                <FormLabel>District Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Terminal code" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="merchant_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Merchant Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Merchant Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="branch_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Branch ID</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="0"
-                    {...field}
-                    value={field.value?.toString()}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
+                  <Input placeholder="District Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -4,7 +4,7 @@ import {
   ChevronDown,
   KeyRound,
   LogOut,
-  UserRound
+  // UserRound
 } from "lucide-react"
 
 import {
@@ -74,12 +74,12 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <UserRound />
                 Manage Account
               </DropdownMenuItem>
-            </DropdownMenuGroup>
+            </DropdownMenuGroup> */}
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => navigate('/change-password')}>

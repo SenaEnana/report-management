@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Plus } from 'lucide-react'
 import { useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import MerchantTable from "@/features/merchant/merchant-table"
+import BranchTable from "@/features/branch/branch-table";
 
-export default function ViewMerchant() {
+export default function ViewBranch() {
   const navigate = useNavigate();
 
   return (
@@ -14,20 +14,20 @@ export default function ViewMerchant() {
       <div className="mb-8">
       <div className="flex items-center justify-between">
             <CardHeader>
-              <CardTitle>Merchant List</CardTitle>
+              <CardTitle>Branch List</CardTitle>
               <p className="text-muted-foreground">
-                This is the list of all merchants or terminalts.
+                This is the list of all branchs or terminalts.
               </p>
             </CardHeader>
             <div className="flex items-center gap-4 m-2">
               <Button className="bg-amber-500 "
-                onClick={() => navigate("/merchant/create")}>
-                <Plus className="mr-2 h-4 w-4" /> Create New Merchant
+                onClick={() => navigate("/branch/create")}>
+                <Plus className="mr-2 h-4 w-4" /> Create New Branch
               </Button>
             </div>
           </div>
         </div>
-        <MerchantTable />
+        <BranchTable />
       </Card>
     </PageWrapper>
   )

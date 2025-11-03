@@ -16,7 +16,7 @@ export default function ViewUser() {
                             <CardTitle>View Users</CardTitle>
                         </CardHeader>
                         <Button
-                            onClick={() => navigate("/user/view/create")}
+                            onClick={() => navigate("/user/create")}
                             className="bg-amber-500 m-2"
                         >
                             Create User

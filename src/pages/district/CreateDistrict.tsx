@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import PageWrapper from "@/components/layout/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ApplicantForm from "@/features/applicants/applicant-form";
+import DistrictForm from "@/features/district/district-form";
 
-export default function Page() {
+export default function CreateDistrict() {
   const navigate = useNavigate();
   return (
     <PageWrapper>
@@ -13,19 +13,19 @@ export default function Page() {
           <div className="mb-8">
             <div className="flex items-center justify-between">
               <CardHeader>
-                <CardTitle>Create New Applicant</CardTitle>
+                <CardTitle>Create New District</CardTitle>
               </CardHeader>
               <Button
-                onClick={() => navigate("/applicant/view")}
+                onClick={() => navigate("/district/view")}
                 className="bg-amber-500"
               >
-                View Applicant
+                View District
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <ApplicantForm />
+          <DistrictForm />
         </CardContent>
       </Card>
     </PageWrapper>

@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Eye, Pencil, Trash2, NotebookPen, RefreshCcw } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -20,18 +20,14 @@ import {
 } from "@/components/ui/dialog";
 
 interface ActionDropdownProps {
-  // onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
-  // onRestore?: () => void;
   type?: "user" | "trash" | "default"; // context based button
 }
 
 export function ActionDropdown({
-  // onView,
   onEdit,
   onDelete,
-  // onRestore,
   type = "default",
 }: ActionDropdownProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -53,14 +49,8 @@ export function ActionDropdown({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          {/* Default actions */}
           {type === "default" && (
             <>
-              {/* <DropdownMenuItem onClick={onView}>
-                <Eye className="mr-2 h-4 w-4" />
-                View
-              </DropdownMenuItem> */}
               <DropdownMenuItem onClick={onEdit}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit

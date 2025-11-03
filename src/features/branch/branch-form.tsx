@@ -15,30 +15,25 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { createMerchantApi } from "@/services/MerchantService";
+import { createBranchAPI } from "@/services/BranchService";
 
 const formSchema = z.object({
-  terminal_code: z.string().min(8, "Terminal code must be at least two characters").max(50, "Terminal code is too long")
+branch_name: z.string().min(2, "Branch name must be at least two characters").max(50, "Branch name is too long")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
     }),
-  merchant_name: z.string().min(2, "Merchant name must be at least two characters").max(50, "Merchant name is too long")
-    .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
-      message: "Invalid characters or HTML tags are not allowed",
-    }),
-  branch_id: z.number().min(1, "Branch ID must be non empty").max(7, "Branch ID must be less than or equal to 7"),
+  district_id: z.number().min(1, "District ID must be non empty").max(7, "District ID must be less than or equal to 7"),
 });
 
-export default function MerchantForm() {
+export default function BranchForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      terminal_code: "",
-      merchant_name: "",
-      branch_id: 0,
+      branch_name: "",
+      district_id: 0,
     },
   });
 
@@ -47,10 +42,9 @@ export default function MerchantForm() {
     setIsSubmitting(true);
 
     try {
-      const success = await createMerchantApi(
-        values.terminal_code,
-        values.merchant_name,
-        Number(values.branch_id),
+      const success = await createBranchAPI(
+        values.branch_name,
+        Number(values.district_id),
       );
 
       console.log('API Response:', success);
@@ -58,17 +52,17 @@ export default function MerchantForm() {
       if (success) {
         toast({
           title: "Success!",
-          description: `${values.merchant_name} Merchant created successfully`,
+          description: `${values.branch_name} Branch created successfully`,
         });
         form.reset();
       } else {
-        throw new Error("Failed to create merchant");
+        throw new Error("Failed to create branch");
       }
     } catch (error: any) {
       console.error("API Error:", error.response?.data || error.message);
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to create merchant. Please try again.",
+        description: error.response?.data?.message || "Failed to create branch. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -82,25 +76,12 @@ export default function MerchantForm() {
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="terminal_code"
+            name="branch_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Terminal Code</FormLabel>
+                <FormLabel>Branch Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Terminal code" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="merchant_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Merchant Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Merchant Name" {...field} />
+                  <Input placeholder="Branch Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,10 +92,10 @@ export default function MerchantForm() {
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="branch_id"
+            name="district_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Branch ID</FormLabel>
+                <FormLabel>District ID</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="0"

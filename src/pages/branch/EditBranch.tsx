@@ -1,16 +1,16 @@
 import PageWrapper from "@/components/layout/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ApplicantEditForm from "@/features/applicants/applicant-edit-form";
+import BranchEditForm from "@/features/branch/branch-edit-form";
 
-export default function EditApplicant() {
+export default function EditBranch() {
   return (
     <PageWrapper>
       <Card>
         <CardHeader>
-          <CardTitle>Update Applicant</CardTitle>
+          <CardTitle>Update Branch</CardTitle>
         </CardHeader>
         <CardContent>
-          <ApplicantEditForm />
+          <BranchEditForm />
         </CardContent>
       </Card>
     </PageWrapper>

@@ -1,23 +1,15 @@
 import apiClient from "@/utils/ApiClient";
 
-export const createUserAPI = async (
-  first_name: string,
-  last_name: string,
-  username: string,
-  role: string,
-  password: string,
+export const createDistrictAPI = async (
+  district_name: string,
 ) => {
   try {
-    const { data } = await apiClient.post("/api/auth/users", {
-        first_name,
-        last_name,
-        username,
-        role,
-        password,
+    const { data } = await apiClient.post("/api/districts", {
+        district_name,
     });
     return data;
   } catch (error: any) {
-    console.error("Error on creating password:", error.message);
+    console.error("Error on creating district:", error.message);
     const errorMessage =
       error.response?.data?.message || "An unexpected error occurred";
 
@@ -25,9 +17,9 @@ export const createUserAPI = async (
   }
 };
 
-export const fetchUsersApi = async () => {
+export const fetchDistrictApi = async () => {
   try {
-    const response = await apiClient.get("/api/auth/users");
+    const response = await apiClient.get("/api/districts");
     const data = response.data; // Directly get the array
     return { data, totalItems: data.length };
   } catch (error: any) {
@@ -36,21 +28,13 @@ export const fetchUsersApi = async () => {
   }
 };
 
-export const updateUserApi = async (
-    id: string,
-    first_name: string,
-    last_name: string,
-    username: string,
-    role: string,
-    password: string,
+export const updateDistrictApi = async (
+    district_id: string,
+    district_name: string,
 ) => {
     try {
-        const { data } = await apiClient.put(`/api/auth/users/${id}`, {
-            first_name,
-            last_name,
-            username,
-            role,
-            password,
+        const { data } = await apiClient.put(`/api/districts/${district_id}`, {
+            district_name,
         });
         return data;
     } catch (error: any) {
@@ -61,9 +45,9 @@ export const updateUserApi = async (
     }
 };
 
-export const softDeleteUserApi = async (user_id: string) => {
+export const softDeleteDistrictApi = async (district_id: string) => {
     try {
-        const response = await apiClient.delete(`/api/auth/users/${user_id}`);
+        const response = await apiClient.delete(`/api/districts/${district_id}`);
         if (response.status === 200 || response.status === 204) {
             return true;
         } else {
