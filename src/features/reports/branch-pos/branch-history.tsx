@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
 import { branchHistoryApi, downloadAllBranchHistoryApi } from "@/services/BranchService";
+import { Input } from "@/components/ui/input";
 
 function BranchHistory() {
   const [branchHistory, setBranchHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [terminalCode, setTerminalCode] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState(""); 
+  const [reportUrl, setReportUrl] = useState<string | null>(null);    
 
   useEffect(() => {
     const loadBranches = async () => {
       try {
         const { data } = await branchHistoryApi(0, 10, ""); //
         setBranchHistory(data);
+          const url = localStorage.getItem("BranchHistoryUrl");
+          if (url) setReportUrl(url);  
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -23,12 +29,28 @@ function BranchHistory() {
     };
     loadBranches();
   }, []);
-  const [reportUrl, setReportUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    const url = localStorage.getItem("BranchHistoryUrl");
-    if (url) setReportUrl(url);
-  }, []);
+const handleDownloadByDate = async () => {
+  if (!terminalCode || !fromDate || !toDate) {
+    alert("Please fill terminal code, from date, and to date");
+    return;
+  }
+  try {
+    const url = `http://172.24.111.254:5000/api/export/branch-history/date?terminal_code=${terminalCode}&from=${fromDate}&to=${toDate}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `merchant_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+    alert("Error downloading merchant history. Check console for details.");
+  }
+};
 
   if (!reportUrl) {
     return <p>No data available.</p>;
@@ -42,12 +64,34 @@ function BranchHistory() {
               Branches Transaction History 
             </CardTitle>
           </CardHeader>
-            <Button className="bg-amber-500 float-end m-2"
-            onClick={() => { downloadAllBranchHistoryApi()
-            }}
-          >
-            <Download className="mr-2 h-4 w-4" /> Download
-          </Button>
+          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg mb-4">
+            <Input
+              placeholder="Terminal Code"
+              value={terminalCode}
+              onChange={(e) => setTerminalCode(e.target.value)}
+              className="w-[180px]"
+            />
+            <Input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
+            <Input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
+            <Button className="bg-amber-500" onClick={handleDownloadByDate}>
+              <Download className="mr-2 h-4 w-4" /> Download by Date
+            </Button>
+          </div>
+            <Button
+              className="bg-gray-500 float-end m-2"
+              onClick={() => { downloadAllBranchHistoryApi()
+              }}
+            >
+              <Download className="mr-2 h-4 w-4" /> Download All
+            </Button>
           {loading ? (
             <p className="text-center py-4 text-gray-500">Loading...</p>
           ) : error ? (

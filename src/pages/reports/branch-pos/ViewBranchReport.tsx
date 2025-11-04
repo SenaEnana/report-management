@@ -9,17 +9,36 @@ import ReportTable from "@/features/reports/branch-pos/report-table"
 
 export default function ViewBranchReport() {
   const navigate = useNavigate();
-  const [reportUrl, setReportUrl] = useState<string | null>(null);
+  const [branchReportUrl, setBranchReportUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const url = localStorage.getItem("lastBranchReportUrl");
-    if (url) setReportUrl(url);
+    if (url) setBranchReportUrl(url);
   }, []);
 
-  if (!reportUrl) {
-    return <p>No report available. Upload one first.</p>;
+const handleDownloadBranchReport = () => {
+  const url = localStorage.getItem("lastBranchReportUrl");
+
+  if (!url) {
+    alert("No report available to download. Upload first!");
+    return;
   }
 
+  const today = new Date().toISOString().split("T")[0];
+  const fileName = `daily_branch_pos_performance_${today}.xlsx`;
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+  if (!branchReportUrl) {
+    return <p>No report available. Upload one first.</p>;
+  }
+////////try tmrw
   return (
     <PageWrapper>
       <Card className="p-3">
@@ -37,13 +56,13 @@ export default function ViewBranchReport() {
                 <Plus className="mr-2 h-4 w-4" /> Upload Report
               </Button>
             <Button className="bg-amber-500 "
-            onClick={() => {
-              const link = document.createElement("a");
-              link.href = reportUrl;
-              link.setAttribute("download", "merged_report.xlsx");
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
+            onClick={() => { handleDownloadBranchReport ()
+              // const link = document.createElement("a");
+              // link.href = branchReportUrl;
+              // link.setAttribute("download", "merged_report.xlsx");
+              // document.body.appendChild(link);
+              // link.click();
+              // link.remove();
             }}
           >
             <Download className="mr-2 h-4 w-4" /> Download

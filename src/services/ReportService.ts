@@ -75,16 +75,17 @@ export const updateExxhangeRateApi = async (
   }
 };
 
+//daily_merchant_pos_performance_
 
 export const downloadMergedBranchApi = async () => {
   try {
-    const response = await apiClient.get("/api/reports/branch", {
+    const response = await apiClient.post("/api/reports/branch", {
       responseType: "blob",
     });
 
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
-    const fileName = `daily_merchant_pos_performance__${new Date()
+    const fileName = `daily_branch_pos_performance_${new Date()
       .toISOString()
       .split("T")[0]}.xlsx`;
 

@@ -36,13 +36,11 @@ export const fetchTerminalApi = async () => {
 export const updateMerchantApi = async (
     id: string,
     merchant_name: string,
-    // terminal_code: string,
     branch_id: number,
 ) => {
     try {
         const { data } = await apiClient.put(`/api/terminals/${id}`, {
             merchant_name,
-            // terminal_code,
             branch_id,
         });
         return data;
@@ -69,7 +67,6 @@ export const softDeleteMerchantApi = async (terminal_id: string) => {
         throw new Error(errorMessage);
     }
 };
-
 
 //top ten merchant display
 export const fetchMerchantsApi = async (pageIndex: number, pageSize: number, searchQuery: string) => {
@@ -156,7 +153,6 @@ export const merchantHistoryApi = async (pageIndex: number, pageSize: number, se
   }
 };
 
-
 export const downloadAllMerchantHistoryApi = async () => {
   try {
     const response = await apiClient.get("/api/export/merchant-history", {
@@ -184,36 +180,3 @@ export const downloadAllMerchantHistoryApi = async () => {
     throw new Error(message);
   }
 };
-
-export const downloadFilteredMerchantHistoryApi = async (
-  terminal_code: string,
-  from: string,
-  to: string
-) => {
-  try {
-    const response = await apiClient.get(
-      `/api/export/merchant-history/date`,
-      {
-        params: { terminal_code, from, to },
-        responseType: "blob", 
-      }
-    );
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    const fileName = `merchant_history_${terminal_code}_${from}_to_${to}.xlsx`;
-    link.href = url;
-    link.setAttribute("download", fileName);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
-
-    return true;
-  } catch (error: any) {
-    console.error("Error downloading merchant history by date:", error);
-    const message =
-      error.response?.data?.message || "Failed to download merchant history.";
-    throw new Error(message);
-  }
-};
-

@@ -66,10 +66,17 @@ const data = {
         { title: "View Merchant Report", url: "/reports/merchant-pos/view" },        
         { title: "Import Branch Report", url: "/reports/branch-pos/import-report" },
         { title: "View Branch Report", url: "/reports/branch-pos/view" },
+      ],
+    },
+    {
+      title: "Histories",
+      url: "/histories",
+      icon: ChartArea,
+      items: [
         { title: "Merchant History", url: "/reports/merchant-pos/merchant-history" },
         { title: "Branch History", url: "/reports/branch-pos/branch-history" }
       ],
-    },
+    },    
   ],
 };
 

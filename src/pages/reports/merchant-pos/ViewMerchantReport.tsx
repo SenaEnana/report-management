@@ -9,14 +9,14 @@ import ReportTable from "@/features/reports/merchant-pos/report-table"
 
 export default function ViewMerchantReport() {
   const navigate = useNavigate();
-  const [reportUrl, setReportUrl] = useState<string | null>(null);
+  const [merchantReportUrl, setMerchantReportUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const url = localStorage.getItem("lastReportUrl");
-    if (url) setReportUrl(url);
+    const url = localStorage.getItem("lastMerchantReportUrl");
+    if (url) setMerchantReportUrl(url);
   }, []);
 
-  if (!reportUrl) {
+  if (!merchantReportUrl) {
     return <p>No report available. Upload one first.</p>;
   }
 
@@ -39,7 +39,7 @@ export default function ViewMerchantReport() {
             <Button className="bg-amber-500 "
             onClick={() => {
               const link = document.createElement("a");
-              link.href = reportUrl;
+              link.href = merchantReportUrl;
               link.setAttribute("download", "merged_report.xlsx");
               document.body.appendChild(link);
               link.click();

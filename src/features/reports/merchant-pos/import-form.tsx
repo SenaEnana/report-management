@@ -25,14 +25,12 @@ import {
 } from "@/components/ui/dialog";
 import {updateExxhangeRateApi, uploadMerchantReportApi } from "@/services/ReportService";
 
-// Schema for file upload
 const formSchema = z.object({
   file: z.any().refine((file) => file instanceof File || file === undefined, {
     message: "Invalid file type",
   }),
 });
 
-// Schema for exchange rate
 const rateSchema = z.object({
   CUP: z.coerce.number().positive("Rate must be positive"),  
   MC: z.coerce.number().positive("Rate must be positive"),  
@@ -43,15 +41,12 @@ export default function ImportForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isRateSubmitted, setIsRateSubmitted] = useState(false);
 
-  // Upload form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { file: undefined },
   });
 
-  // Exchange rate form
   const rateForm = useForm<z.infer<typeof rateSchema>>({
     resolver: zodResolver(rateSchema),
     defaultValues: { CUP: 0, MC: 0, VC: 0 },
@@ -59,36 +54,23 @@ export default function ImportForm() {
 
   async function onSubmitRate(values: z.infer<typeof rateSchema>) {
     try {
-      const success = await updateExxhangeRateApi(
-        values.CUP,  
-        values.MC,              
-        values.VC,
-      );
+      const success = await updateExxhangeRateApi(values.CUP, values.MC, values.VC);
       if (success) {
-      toast({ title: "Exchange Rate Saved!", description: "You can now upload a report." });
-      }else {
-        throw new Error("Failed to create user");
+        toast({
+          title: "Exchange Rate Saved!",
+          description: "You can now upload a report.",
+        });
+      } else {
+        throw new Error("Failed to save exchange rate");
       }
-      form.reset();
-      setIsRateSubmitted(true);
+      rateForm.reset();
       setIsDialogOpen(false);
-    } 
-    catch (error: any) {
+    } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     }
   }
 
-  // Upload Excel file
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!isRateSubmitted) {
-      toast({
-        title: "Missing Exchange Rate",
-        description: "Please submit exchange rate first.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const success = await uploadMerchantReportApi(values.file);
@@ -97,7 +79,10 @@ export default function ImportForm() {
         form.reset();
       }
     } catch (error: any) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ 
+        title: "Error", 
+        description: error.message, 
+        variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
@@ -185,7 +170,7 @@ export default function ImportForm() {
                       type="file"
                       accept=".xlsx, .xls"
                       onChange={(e) => field.onChange(e.target.files?.[0])}
-                      disabled={!isRateSubmitted}
+                      // 👇 removed disabled={!isRateSubmitted}
                     />
                   </FormControl>
                   <FormMessage />
@@ -206,7 +191,7 @@ export default function ImportForm() {
             <Button
               type="submit"
               className="bg-amber-500"
-              disabled={isSubmitting || !isRateSubmitted}
+              disabled={isSubmitting} // 👇 removed !isRateSubmitted check
             >
               {isSubmitting ? "Submitting..." : "Submit"}
             </Button>

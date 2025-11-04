@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { CheckboxColumn } from "@/components/common/DataTable/CheckboxColumn";
-import { PaginationControls } from "@/components/common/DataTable/PaginationControls";
+// import { PaginationControls } from "@/components/common/DataTable/PaginationControls";
 import { ActionDropdown } from "@/components/common/DataTable/ActionDropdown";
 import { fetchTerminalApi, softDeleteMerchantApi } from "@/services/MerchantService";
 
@@ -251,11 +251,11 @@ export default function MerchantTable() {
                     </TableBody>
                 </Table>
             </div>
-            <PaginationControls
+            {/* <PaginationControls
                 currentPage={pageIndex}
                 totalPages={pageCount}
                 onPageChange={(page: number) => setPageIndex(page)}
-            />
+            /> */}
         </div>
     );
 }

@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { User } from "lucide-react";
 import { CheckboxColumn } from "@/components/common/DataTable/CheckboxColumn";
-import { PaginationControls } from "@/components/common/DataTable/PaginationControls";
+// import { PaginationControls } from "@/components/common/DataTable/PaginationControls";
 import { ActionDropdown } from "@/components/common/DataTable/ActionDropdown";
 import { fetchUsersApi, softDeleteUserApi } from "@/services/UserService";
 
@@ -75,24 +75,8 @@ export default function UserTable() {
 
     const handleDeleteUser = async (data: any) => {
         try {
-            // console.log("data", data.user_id);
             const userId = data.user_id;
             const isSoftDeleted = await softDeleteUserApi(userId);
-            // if (isSoftDeleted) {
-            //     setData((prevData) => prevData.filter((item) => item.id !== userId));
-            //     setTotalItems((prevTotal) => prevTotal - 1);
-            //     toast({
-            //         title: "Success!",
-            //         description: `${data.username} user deleted!`,
-            //     });
-
-            // if (isSoftDeleted) {
-            //     await fetchData(); // re-fetch fresh data from backend
-            //     toast({
-            //         title: "Success!",
-            //         description: `${data.username} user deleted!`,
-            //     });
-
             if (isSoftDeleted) {
                 // instantly update UI
                 setData((prevData) => prevData.filter((item) => item.id !== userId));
@@ -265,11 +249,11 @@ export default function UserTable() {
                     </TableBody>
                 </Table>
             </div>
-            <PaginationControls
+            {/* <PaginationControls
                 currentPage={pageIndex}
                 totalPages={pageCount}
                 onPageChange={(page: number) => setPageIndex(page)}
-            />
+            /> */}
         </div>
     );
 }

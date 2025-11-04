@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import {downloadAllMerchantHistoryApi, downloadFilteredMerchantHistoryApi, merchantHistoryApi } from "@/services/MerchantService";
+import {downloadAllMerchantHistoryApi, merchantHistoryApi } from "@/services/MerchantService";
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 
 export type Merchant = {
   id: string;
@@ -31,13 +30,15 @@ function MerchantHistory() {
   const [terminalCode, setTerminalCode] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState(""); 
-  const { toast } = useToast();
+  const [reportUrl, setReportUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const loadMerchants = async () => {
       try {
         const { data } = await merchantHistoryApi(0, 10, ""); //
         setMerchantsHistory(data);
+          const url = localStorage.getItem("MerchantHistoryUrl");
+          if (url) setReportUrl(url);        
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -46,50 +47,28 @@ function MerchantHistory() {
     };
     loadMerchants();
   }, []);
-  const [reportUrl, setReportUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    const url = localStorage.getItem("MerchantHistoryUrl");
-    if (url) setReportUrl(url);
-  }, []);
-
-//   const handleDownloadByDate = async () => {
-//   if (!terminalCode || !fromDate || !toDate) {
-//     alert("Please fill terminal code, from date, and to date");
-//     return;
-//   }
-//   try {
-//     // Construct the API URL
-//     const url = `http://172.24.111.254:5000/api/export/merchant-history/date?terminal_code=${terminalCode}&from=${fromDate}&to=${toDate}`;
-
-//     // Create a hidden link and trigger download
-//     const link = document.createElement("a");
-//     link.href = url;
-//     link.setAttribute(
-//       "download",
-//       `merchant_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
-//     );
-//     document.body.appendChild(link);
-//     link.click();
-//     document.body.removeChild(link);
-//   } catch (error) {
-//     console.error("Error downloading file:", error);
-//     alert("Error downloading merchant history. Check console for details.");
-//   }
-// };
-        const handleDownloadByDate = async () => {
-          if (!terminalCode || !fromDate || !toDate) {
-            alert("Please fill terminal code, from date, and to date");
-            return;
-          }
-
-          try {
-            await downloadFilteredMerchantHistoryApi(terminalCode, fromDate, toDate);
-          } catch (error) {
-            console.error(error);
-            alert("Error downloading merchant history. Check console for details.");
-          }
-        };
+  const handleDownloadByDate = async () => {
+  if (!terminalCode || !fromDate || !toDate) {
+    alert("Please fill terminal code, from date, and to date");
+    return;
+  }
+  try {
+    const url = `http://172.24.111.254:5000/api/export/merchant-history/date?terminal_code=${terminalCode}&from=${fromDate}&to=${toDate}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `merchant_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+    alert("Error downloading merchant history. Check console for details.");
+  }
+};
 
   if (!reportUrl) {
     return <p>No data available.</p>;
@@ -109,7 +88,7 @@ function MerchantHistory() {
               value={terminalCode}
               onChange={(e) => setTerminalCode(e.target.value)}
               className="w-[180px]"
-            />
+            />            
             <Input
               type="date"
               value={fromDate}

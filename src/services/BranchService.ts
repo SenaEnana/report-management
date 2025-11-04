@@ -66,6 +66,32 @@ export const softDeleteBranchApi = async (branch_id: string) => {
     }
 };
 
+export const downloadBranchesApi = async () => {
+  try {
+    const response = await apiClient.get("/api/branches/download", {
+      responseType: "blob",
+    });
+    console.log("✅ Blob response:", response);
+
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "branches.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error: any) {
+    console.error("❌ Error downloading branches:", error);
+    const message =
+      error.response?.data?.message || "Failed to download branches.";
+    throw new Error(message);
+  }
+};
+
 export const branchHistoryApi = async (pageIndex: number, pageSize: number, searchQuery: string) => {
   try {
     const response = await apiClient.get(

@@ -60,3 +60,34 @@ export const softDeleteDistrictApi = async (district_id: string) => {
         throw new Error(errorMessage);
     }
 };
+
+export const downloadDistrictsApi = async () => {
+  try {
+    const response = await apiClient.get("/api/districts/download", {
+      responseType: "blob",
+    });
+
+    const disposition = response.headers["content-disposition"];
+    let fileName = "districts.xlsx";
+    if (disposition && disposition.includes("filename=")) {
+      fileName = disposition
+        .split("filename=")[1]
+        .replace(/["']/g, "")
+        .trim();
+    }
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error: any) {
+    console.error("Error downloading districts:", error);
+    const message =
+      error.response?.data?.message || "Failed to download districts.";
+    throw new Error(message);
+  }
+};
