@@ -6,7 +6,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 interface UserState {
   username: string;
   role: string;
-  // email: string;
   loading: boolean;
   isAuth: boolean;
   error: string | null;
@@ -58,7 +57,6 @@ export const signInThunk = createAsyncThunk<UserState, { username: string; passw
 const initialState: UserState = loadUserDataFromLocalStorage() || {
   username: "",
   role: "user",
-  // email: "",
   loading: false,
   isAuth:false,
   error: null,
@@ -75,7 +73,6 @@ const userSlice = createSlice({
       const { username, role, error, loading, token, tokenType, expiresAt, isAuth } = action.payload;
       state.username = username;
       state.role = role;
-      // state.email = email;
       state.loading = loading;
       state.error = error;
       state.isAuth = isAuth
@@ -88,7 +85,6 @@ const userSlice = createSlice({
     signOut(state) {
       state.username = "";
       state.role = "";
-      // state.email = "";
       state.loading = false;
       state.isAuth = false;
       state.error = null;
@@ -105,7 +101,6 @@ const userSlice = createSlice({
         state.loading = true;
         state.username = "";
         state.role = "";
-        // state.email = "";
         state.error = null;
         state.isAuth = false;
         state.token = null;
@@ -116,7 +111,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.username = action.payload.username;
         state.role = action.payload.role;
-        // state.email = action.payload.email;
         state.error = null;
         state.isAuth = true;
         state.token = action.payload.token;
@@ -127,7 +121,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.username = "";
         state.role = "";
-        // state.email = "";
         state.error = action.error.message || "Failed to fetch user";
         state.isAuth = false;
         state.token = null;
@@ -142,29 +135,4 @@ export const { setUserData, signOut } = userSlice.actions;
 // Selector
 export const selectUser = (state: { user: UserState }) => state.user;
 
-// Export reducer
 export default userSlice.reducer;
-
-//for permission based access control
-// import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-// interface UserState {
-//   permissions: string[];
-// }
-
-// const initialState: UserState = {
-//   permissions: [],
-// };
-
-// const userSlice = createSlice({
-//   name: 'user',
-//   initialState,
-//   reducers: {
-//     setPermissions(state, action: PayloadAction<string[]>) {
-//       state.permissions = action.payload;
-//     },
-//   },
-// });
-
-// export const { setPermissions } = userSlice.actions;
-// export default userSlice.reducer;

@@ -17,7 +17,6 @@ export const signIn = async (
   password: string,
 ): Promise<SignInResponse | void> => {
   try {
-    // console.log("request: ", username, password);
 
     const response = await axios.post<SignInResponse>(
       "http://172.24.111.254:5000/api/auth/login",
@@ -27,17 +26,8 @@ export const signIn = async (
       }
     );
 
-    // Handle successful response
-    console.log("User signed in:", response.data);
-
     return response.data;
   } catch (error: any) {
-    // Handle error
-    if (axios.isAxiosError(error) && error.response) {
-      console.error("Error response:", error.response.data);
-    } else {
-      console.error("Error message:", error.message);
-    }
     const errorMessage =
       error.response?.data?.message || "An unexpected error occurred";
 
@@ -50,13 +40,11 @@ export default { signIn };
 export const changePasswordApi = async (
   currentPassword: string,
   newPassword: string,
-  // confirm_password: string,
 ) => {
   try {
     const { data } = await apiClient.post("/api/auth/change-password", {
       currentPassword,
       newPassword,
-      // confirm_password,
     });
     return data;
   } catch (error: any) {

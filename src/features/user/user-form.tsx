@@ -52,7 +52,6 @@ export default function UserForm() {
       username: "",
       role: "",
       password: "",
-      // confirm_password: "",
     },
   });
 

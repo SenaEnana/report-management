@@ -104,7 +104,7 @@ function MerchantHistory() {
             </Button>
           </div>
             <Button
-              className="bg-gray-500 float-end m-2"
+              className="bg-amber-500 float-end m-2"
               onClick={() => { downloadAllMerchantHistoryApi()
               }}
             >

@@ -29,10 +29,10 @@ function DashboardContent() {
   }, []);
 
   const features = [
-    { title: "Our Branches", value: 438 },
+    { title: "Districts", value: 10 },  
+    { title: "Our Branches", value: 400 },
     { title: "ATM Machines", value: 352 },
-    { title: "POS Machines", value: 133 },
-    { title: "Employees", value: 7000 },
+    { title: "POS Machines", value: 500 },
   ];
 
   if (!reportUrl) {

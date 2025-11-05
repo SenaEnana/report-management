@@ -31,16 +31,13 @@ const LoginForm: React.FC = () => {
   });
   const dispatch = useDispatch<AppDispatch>();
   const navigate  = useNavigate();
-  const { loading,  isAuth } = useSelector((state: RootState) => state.user);
-  
+  const { loading,  isAuth, error } = useSelector((state: RootState) => state.user);
 
   const onSubmit = async(data: LoginFormInputs) => {
     await dispatch(signInThunk({ username: data.username, password: data.password}));
-    
-    
   };
 
-    // Use useEffect to handle redirection after successful login
+  // Use useEffect to handle redirection after successful login
     // useEffect(() => {
     //   if (isAuth) {
     //     navigate("/");
@@ -157,6 +154,11 @@ const LoginForm: React.FC = () => {
             )}
           </div>
         </div>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+      {error}
+    </div>
+  )}
         {/* Submit Button */}
         <button
           type="submit"

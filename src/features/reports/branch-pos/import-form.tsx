@@ -102,7 +102,7 @@ export default function ImportForm() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-amber-700">Submit Exchange Rate</Button>
+            <Button className="bg-amber-500">Submit Exchange Rate</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

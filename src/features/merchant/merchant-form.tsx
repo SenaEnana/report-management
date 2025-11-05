@@ -52,8 +52,7 @@ export default function MerchantForm() {
         values.merchant_name,
         Number(values.branch_id),
       );
-
-      console.log('API Response:', success);
+      // console.log('API Response:', success);
 
       if (success) {
         toast({
