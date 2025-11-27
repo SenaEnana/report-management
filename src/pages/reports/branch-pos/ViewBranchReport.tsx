@@ -35,10 +35,10 @@ const handleDownloadBranchReport = () => {
   document.body.removeChild(link);
 };
 
-  if (!branchReportUrl) {
-    return <p>No report available. Upload one first.</p>;
-  }
-////////try tmrw
+  // if (!branchReportUrl) {
+  //   return <p>No report available. Upload one first.</p>;
+  // }
+  
   return (
     <PageWrapper>
       <Card className="p-3">

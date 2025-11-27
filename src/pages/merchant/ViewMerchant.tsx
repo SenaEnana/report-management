@@ -7,6 +7,7 @@ import MerchantTable from "@/features/merchant/merchant-table"
 
 export default function ViewMerchant() {
   const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
 
   return (
     <PageWrapper>
@@ -20,10 +21,12 @@ export default function ViewMerchant() {
               </p>
             </CardHeader>
             <div className="flex items-center gap-4 m-2">
+            {currentUser.role === "admin" && (
               <Button className="bg-amber-500 "
                 onClick={() => navigate("/merchant/create")}>
                 <Plus className="mr-2 h-4 w-4" /> Create New Merchant
               </Button>
+              )}
             </div>
           </div>
         </div>

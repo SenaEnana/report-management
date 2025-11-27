@@ -80,17 +80,13 @@ import EditDistrict from "./pages/district/EditDistrict";
              <Route
                path="*"
                element={
-                 <ProtectedRoute>
                    <Custom404 />
-                 </ProtectedRoute>
                }
              />
              <Route
                path="/page-forbidden"
                element={
-                 <ProtectedRoute>
                    <PageForbidden />
-                 </ProtectedRoute>
                }
              />
              <Route
@@ -110,7 +106,7 @@ import EditDistrict from "./pages/district/EditDistrict";
                }
              />  
               <Route
-               path="/reports/merchant-pos/merchant-history"
+               path="/histories/merchant-pos/merchant-history"
                element={
                  <ProtectedRoute>
                    <MerchantHistoryPage/>
@@ -134,7 +130,7 @@ import EditDistrict from "./pages/district/EditDistrict";
                }
              />
               <Route
-               path="/reports/branch-pos/branch-history"
+               path="/histories/branch-pos/branch-history"
                element={
                  <ProtectedRoute>
                    <BranchHistoryPage/>

@@ -1,7 +1,8 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, matchPath } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { rolePermissions } from "@/utils/permission";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,46 +10,33 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const isAuth = useSelector((state: RootState) => state.user.isAuth);
+  const role = useSelector((state: RootState) => state.user.role);
+  const location = useLocation();
+
   const token = localStorage.getItem("userData");
-
-  // Parse stored user data
   const storedUser = token ? JSON.parse(token) : null;
-  const hasValidToken = storedUser?.token && storedUser?.expiresAt && new Date(storedUser.expiresAt) > new Date();
+  const hasValidToken =
+    storedUser?.token &&
+    storedUser?.expiresAt &&
+    new Date(storedUser.expiresAt) > new Date();
 
-  // If neither Redux nor localStorage says user is authenticated
   if (!isAuth && !hasValidToken) {
     return <Navigate to="/sign-in" replace />;
+  }
+
+  const allowedRoutes = rolePermissions[role] || [];
+  const currentPath = location.pathname;
+
+  // Fix: use matchPath for dynamic route patterns like /branch/view/edit/:id
+  const isAllowed = allowedRoutes.some((route) =>
+    matchPath({ path: route, end: true }, currentPath)
+  );
+
+  if (!isAllowed) {
+    return <Navigate to="/page-forbidden" replace />;
   }
 
   return <>{children}</>;
 };
 
 export default ProtectedRoute;
-
-
-
-
-// import React from "react";
-// import { Navigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
-// import { RootState } from "@/store/store"; // Update the path based on your project structure
-
-// interface ProtectedRouteProps {
-//   children: React.ReactNode;
-// }
-
-// const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-//   const isAuth = useSelector((state: RootState) => state.user.isAuth);
-//   const token = localStorage.getItem("token");
-
-//   if (!isAuth) {
-//     // Redirect to the sign-in page if not authenticated
-//     return <Navigate to="/sign-in" />;
-//   }
-
-//   // Render the children if authenticated
-//   return <>{children}</>;
-// };
-
-// export default ProtectedRoute;
-

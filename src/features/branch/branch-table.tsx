@@ -25,6 +25,7 @@ export type Merchant = {
     id: string;
     branch_name: string;
     district_name: string;
+    role: string;
 };
 
 const columnsConfig = [
@@ -35,19 +36,19 @@ export default function BranchTable() {
     const navigate = useNavigate();
     const [data, setData] = useState<Merchant[]>([]);
     const [totalItems, setTotalItems] = useState(0);
-    const [pageIndex, setPageIndex] = useState(0);
+    const [pageIndex ] = useState(0);
     const [pageSize] = useState(10);
     const [searchQuery ] = useState("");
     const { toast } = useToast();
     const [loading, setLoading] = useState(false);
-
+    const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
+    
     const fetchData = async () => {
         setLoading(true);
         try {
             const response = await fetchBranchApi();
             setData(response.data);
             setTotalItems(response.totalItems);
-            // console.log("branch data", response.data );
         } catch (error) {
             console.error("Error fetching branches:", error);
         } finally {
@@ -74,7 +75,6 @@ export default function BranchTable() {
                     title: "Success!",
                     description: `${data.branch_name} branch deleted!`,
                 });
-                // refresh table silently
                 fetchData();
 
             } else {
@@ -101,38 +101,43 @@ export default function BranchTable() {
 
     const pageCount = Math.ceil(totalItems / pageSize);
 
-    const table = useReactTable({
-        data,
-        columns: [
+
+        const dynamicColumns = [
             CheckboxColumn,
             ...columnsConfig.map(({ accessorKey, title }) => ({
                 accessorKey,
                 header: title,
                 cell: ({ row }: { row: any }) => <div>{row.getValue(accessorKey)}</div>,
             })),
-            {
+        ];
+
+        // Add Actions column ONLY for admin
+        if (currentUser.role === "admin") {
+            dynamicColumns.push({
                 id: "actions",
-                header: "Actions",
+                header: () => <span>Actions</span>,
+                enableSorting: false,
+                enableHiding: false,
                 cell: ({ row }: { row: any }) => (
                     <ActionDropdown
-                        onEdit={() => {
-                            handleEditBranch(row.original);
-                        }}
-                        onDelete={() => {
-                            handleDeleteBranch(row.original);
-                        }}
-                        type="user"
+                        onEdit={() => handleEditBranch(row.original)}
+                        onDelete={() => handleDeleteBranch(row.original)}
+                        role={currentUser.role}
                     />
                 ),
+            });
+        }
+
+        const table = useReactTable({
+            data,
+            columns: dynamicColumns,
+            pageCount,
+            manualPagination: true,
+            getCoreRowModel: getCoreRowModel(),
+            state: {
+                pagination: { pageIndex, pageSize },
             },
-        ],
-        pageCount,
-        manualPagination: true,
-        getCoreRowModel: getCoreRowModel(),
-        state: {
-            pagination: { pageIndex, pageSize },
-        },
-    });
+        });
 
     return (
         <div className="w-full">

@@ -46,11 +46,13 @@ export default function UserTable() {
     const navigate = useNavigate();
     const [data, setData] = useState<User[]>([]);
     const [totalItems, setTotalItems] = useState(0);
-    const [pageIndex, setPageIndex] = useState(0);
+    const [pageIndex ] = useState(0);
     const [pageSize] = useState(10);
     const [searchQuery ] = useState("");
     const { toast } = useToast();
     const [loading, setLoading] = useState(false);
+    const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
+    
 
     const fetchData = async () => {
         setLoading(true);
@@ -137,7 +139,8 @@ export default function UserTable() {
                         onDelete={() => {
                             handleDeleteUser(row.original);
                         }}
-                        type="user"
+                        type="default"
+                        role= {currentUser.role}
                     />
                 ),
             },
@@ -249,11 +252,6 @@ export default function UserTable() {
                     </TableBody>
                 </Table>
             </div>
-            {/* <PaginationControls
-                currentPage={pageIndex}
-                totalPages={pageCount}
-                onPageChange={(page: number) => setPageIndex(page)}
-            /> */}
         </div>
     );
 }

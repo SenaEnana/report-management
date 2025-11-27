@@ -22,13 +22,15 @@ import {
 interface ActionDropdownProps {
   onEdit?: () => void;
   onDelete?: () => void;
-  type?: "user" | "trash" | "default"; // context based button
+  // type?: "user" | "trash" | "default";
+  role?: "admin" | "user";
 }
 
 export function ActionDropdown({
   onEdit,
   onDelete,
-  type = "default",
+  // type = "default",
+  role = "user",
 }: ActionDropdownProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -37,6 +39,9 @@ export function ActionDropdown({
     setIsDropdownOpen(false);
     setIsDialogOpen(true);
   };
+
+  // Hide the entire dropdown for normal users
+  if (role === "user") return null;
 
   return (
     <>
@@ -47,10 +52,12 @@ export function ActionDropdown({
             <DotsVerticalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          {type === "default" && (
+
+          {role === "admin" && (
             <>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem onClick={onEdit}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit
@@ -64,35 +71,6 @@ export function ActionDropdown({
               </DropdownMenuItem>
             </>
           )}
-
-          {/* User-specific actions */}
-          {type === "user" && (
-            <>
-              {/* <DropdownMenuItem onClick={onView}>
-                <Eye className="mr-2 h-4 w-4" />
-                View
-              </DropdownMenuItem> */}
-              <DropdownMenuItem onClick={onEdit}>
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleDeleteClick}
-                className="text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </>
-          )}
-
-          {/* Trash-specific actions */}
-          {/* {type === "trash" && (
-            <DropdownMenuItem onClick={onRestore}>
-              <RefreshCcw className="mr-2 h-4 w-4" />
-              Restore
-            </DropdownMenuItem>
-          )} */}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -100,12 +78,9 @@ export function ActionDropdown({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-center">
-              Delete Confirmation
-            </DialogTitle>
+            <DialogTitle className="text-center">Delete Confirmation</DialogTitle>
             <DialogDescription className="text-center">
-              Are you sure you want to delete this record? This action cannot be
-              undone.
+              Are you sure you want to delete this record? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-center gap-4 mt-4">

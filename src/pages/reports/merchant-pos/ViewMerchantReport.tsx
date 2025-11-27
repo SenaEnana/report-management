@@ -16,9 +16,28 @@ export default function ViewMerchantReport() {
     if (url) setMerchantReportUrl(url);
   }, []);
 
-  if (!merchantReportUrl) {
-    return <p>No report available. Upload one first.</p>;
+  const handleDownloadMerchantReport = () => {
+  const url = localStorage.getItem("lastMerchantReportUrl");
+
+  if (!url) {
+    alert("No report available to download. Upload first!");
+    return;
   }
+
+  const today = new Date().toISOString().split("T")[0];
+  const fileName = `merged_report_${today}.xlsx`;
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+  // if (!merchantReportUrl) {
+  //   return <p>No report available. Upload one first.</p>;
+  // }
 
   return (
     <PageWrapper>
@@ -37,13 +56,13 @@ export default function ViewMerchantReport() {
                 <Plus className="mr-2 h-4 w-4" /> Upload Report
               </Button>
             <Button className="bg-amber-500 "
-            onClick={() => {
-              const link = document.createElement("a");
-              link.href = merchantReportUrl;
-              link.setAttribute("download", "merged_report.xlsx");
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
+            onClick={() => { handleDownloadMerchantReport()
+              // const link = document.createElement("a");
+              // link.href = merchantReportUrl;
+              // link.setAttribute("download", "merged_report.xlsx");
+              // document.body.appendChild(link);
+              // link.click();
+              // link.remove();
             }}
           >
             <Download className="mr-2 h-4 w-4" /> Download

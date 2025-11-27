@@ -38,11 +38,13 @@ export default function MerchantTable() {
     const navigate = useNavigate();
     const [data, setData] = useState<Merchant[]>([]);
     const [totalItems, setTotalItems] = useState(0);
-    const [pageIndex, setPageIndex] = useState(0);
+    const [pageIndex ] = useState(0);
     const [pageSize] = useState(10);
     const [searchQuery ] = useState("");
     const { toast } = useToast();
     const [loading, setLoading] = useState(false);
+    const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
+    
 
     const fetchData = async () => {
         setLoading(true);
@@ -107,70 +109,46 @@ export default function MerchantTable() {
 
     const pageCount = Math.ceil(totalItems / pageSize);
 
-    const table = useReactTable({
-        data,
-        columns: [
+        const dynamicColumns = [
             CheckboxColumn,
             ...columnsConfig.map(({ accessorKey, title }) => ({
                 accessorKey,
                 header: title,
                 cell: ({ row }: { row: any }) => <div>{row.getValue(accessorKey)}</div>,
             })),
-            {
+        ];
+
+        // Add Actions column ONLY for admin
+        if (currentUser.role === "admin") {
+            dynamicColumns.push({
                 id: "actions",
-                header: "Actions",
+                header: () => <span>Actions</span>,
+                enableSorting: false,
+                enableHiding: false,
                 cell: ({ row }: { row: any }) => (
                     <ActionDropdown
-                        // onView={() => {
-                        //     handleViewUser(row.original);
-                        // }}
-                        onEdit={() => {
-                            handleEditTerminal(row.original);
-                        }}
-                        onDelete={() => {
-                            handleDeleteTerminal(row.original);
-                        }}
-                        type="user"
+                        onEdit={() => handleEditTerminal(row.original)}
+                        onDelete={() => handleDeleteTerminal(row.original)}
+                        role={currentUser.role}
                     />
                 ),
+            });
+        }
+
+        const table = useReactTable({
+            data,
+            columns: dynamicColumns,
+            pageCount,
+            manualPagination: true,
+            getCoreRowModel: getCoreRowModel(),
+            state: {
+                pagination: { pageIndex, pageSize },
             },
-        ],
-        pageCount,
-        manualPagination: true,
-        getCoreRowModel: getCoreRowModel(),
-        state: {
-            pagination: { pageIndex, pageSize },
-        },
-    });
+        });
 
     return (
         <div className="w-full">
             <div className="flex justify-between mb-4">
-                {/* <div className="flex items-center gap-4 m-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="outline"
-                                className="font-semibold text-navy-800 border-gray-200"
-                            >
-                                Export
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-16 flex justify-center">
-                            <DropdownMenuGroup className="w-full">
-                                <DropdownMenuItem>
-                                    Excel
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    CSV
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    PDF
-                                </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div> */}
             </div>
             <div className="rounded-md border">
                 <Table>

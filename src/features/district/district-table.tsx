@@ -33,11 +33,13 @@ export default function DistrictTable() {
     const navigate = useNavigate();
     const [data, setData] = useState<Merchant[]>([]);
     const [totalItems, setTotalItems] = useState(0);
-    const [pageIndex, setPageIndex] = useState(0);
+    const [pageIndex ] = useState(0);
     const [pageSize] = useState(10);
     const [searchQuery ] = useState("");
     const { toast } = useToast();
     const [loading, setLoading] = useState(false);
+    const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
+    
 
     const fetchData = async () => {
         setLoading(true);
@@ -54,8 +56,6 @@ export default function DistrictTable() {
 
     const handleEditDistrict = (data: any) => {
         try {
-            // console.log("data", data);
-            // console.log("the id fetched from the data is ", data.district_id);
             navigate(`/district/view/edit/${data.district_id}`, { state: data });
         } catch (error) { }
     };
@@ -100,38 +100,75 @@ export default function DistrictTable() {
 
     const pageCount = Math.ceil(totalItems / pageSize);
 
-    const table = useReactTable({
-        data,
-        columns: [
-            CheckboxColumn,
-            ...columnsConfig.map(({ accessorKey, title }) => ({
-                accessorKey,
-                header: title,
-                cell: ({ row }: { row: any }) => <div>{row.getValue(accessorKey)}</div>,
-            })),
-            {
-                id: "actions",
-                header: "Actions",
-                cell: ({ row }: { row: any }) => (
-                    <ActionDropdown
-                        onEdit={() => {
-                            handleEditDistrict(row.original);
-                        }}
-                        onDelete={() => {
-                            handleDeleteDistrict(row.original);
-                        }}
-                        type="user"
-                    />
-                ),
-            },
-        ],
-        pageCount,
-        manualPagination: true,
-        getCoreRowModel: getCoreRowModel(),
-        state: {
-            pagination: { pageIndex, pageSize },
-        },
-    });
+         const dynamicColumns = [
+             CheckboxColumn,
+             ...columnsConfig.map(({ accessorKey, title }) => ({
+                 accessorKey,
+                 header: title,
+                 cell: ({ row }: { row: any }) => <div>{row.getValue(accessorKey)}</div>,
+             })),
+         ];
+ 
+         // Add Actions column ONLY for admin
+         if (currentUser.role === "admin") {
+             dynamicColumns.push({
+                 id: "actions",
+                 header: () => <span>Actions</span>,
+                 enableSorting: false,
+                 enableHiding: false,
+                 cell: ({ row }: { row: any }) => (
+                     <ActionDropdown
+                         onEdit={() => handleEditDistrict(row.original)}
+                         onDelete={() => handleDeleteDistrict(row.original)}
+                         role={currentUser.role}
+                     />
+                 ),
+             });
+         }
+ 
+         const table = useReactTable({
+             data,
+             columns: dynamicColumns,
+             pageCount,
+             manualPagination: true,
+             getCoreRowModel: getCoreRowModel(),
+             state: {
+                 pagination: { pageIndex, pageSize },
+             },
+         });   
+    // const table = useReactTable({
+    //     data,
+    //     columns: [
+    //         CheckboxColumn,
+    //         ...columnsConfig.map(({ accessorKey, title }) => ({
+    //             accessorKey,
+    //             header: title,
+    //             cell: ({ row }: { row: any }) => <div>{row.getValue(accessorKey)}</div>,
+    //         })),
+    //         {
+    //             id: "actions",
+    //             header: "Actions",
+    //             cell: ({ row }: { row: any }) => (
+    //                 <ActionDropdown
+    //                     onEdit={() => {
+    //                         handleEditDistrict(row.original);
+    //                     }}
+    //                     onDelete={() => {
+    //                         handleDeleteDistrict(row.original);
+    //                     }}
+    //                     type="default"
+    //                     role = {currentUser.role}
+    //                 />
+    //             ),
+    //         },
+    //     ],
+    //     pageCount,
+    //     manualPagination: true,
+    //     getCoreRowModel: getCoreRowModel(),
+    //     state: {
+    //         pagination: { pageIndex, pageSize },
+    //     },
+    // });
 
     return (
         <div className="w-full">
