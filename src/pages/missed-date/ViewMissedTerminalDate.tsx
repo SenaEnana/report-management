@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Plus } from 'lucide-react'
 import { useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import MissedDateTable from "@/features/missed-date/missed-date-table";
+import MissedTerminalDate from "@/features/missed-date/missed-terminal-date";
 
-export default function ViewMissedDate() {
+export default function ViewMissedTerminalDate() {
   const navigate = useNavigate();
 
   return (
@@ -14,7 +14,7 @@ export default function ViewMissedDate() {
       <div className="mb-8">
       <div className="flex items-center justify-between">
             <CardHeader>
-              <CardTitle>Merchant List</CardTitle>
+              <CardTitle>Missed Terminal Report Date List</CardTitle>
               <p className="text-muted-foreground">
                 This is the list of all missed transaction or report date.
               </p>
@@ -27,7 +27,7 @@ export default function ViewMissedDate() {
             </div>
           </div>
         </div>
-        <MissedDateTable />
+        <MissedTerminalDate />
       </Card>
     </PageWrapper>
   )

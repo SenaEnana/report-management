@@ -25,7 +25,8 @@ import ViewBranch from "./pages/branch/ViewBranch";
 import CreateDistrict from "./pages/district/CreateDistrict";
 import ViewDistrict from "./pages/district/ViewDistrict";
 import EditDistrict from "./pages/district/EditDistrict";
-import ViewMissedDate from "./pages/missed-date/ViewMissedDate";
+import ViewMissedTerminalDate from "./pages/missed-date/ViewMissedTerminalDate";
+import ViewMissedBranchDate from "./pages/missed-date/ViewMissedBranchDate";
   
   function App() {
   const queryClient = new QueryClient();
@@ -211,13 +212,21 @@ import ViewMissedDate from "./pages/missed-date/ViewMissedDate";
                }
              />   
               <Route
-               path="/missed/missed-date-table"
+               path="/missed/missed-terminal-date/view"
                element={
                  <ProtectedRoute>
-                   <ViewMissedDate/>
+                   <ViewMissedTerminalDate/>
                  </ProtectedRoute>
                }
-             />                                                           
+             /> 
+              <Route
+               path="/missed/missed-branch-date/view"
+               element={
+                 <ProtectedRoute>
+                   <ViewMissedBranchDate/>
+                 </ProtectedRoute>
+               }
+             />                                                                        
            </Routes>
          </Router>
        </QueryClientProvider>

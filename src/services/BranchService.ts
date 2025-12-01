@@ -71,7 +71,7 @@ export const downloadBranchesApi = async () => {
     const response = await apiClient.get("/api/branches/download", {
       responseType: "blob",
     });
-    console.log("✅ Blob response:", response);
+    console.log("Blob response:", response);
 
     const blob = new Blob([response.data], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

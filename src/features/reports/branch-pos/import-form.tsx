@@ -23,21 +23,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { uploadBranchReportApi, updateExxhangeRateApi } from "@/services/ReportService";
+import { uploadBranchReportApi, updateExchangeRateApi } from "@/services/ReportService";
 
 const formSchema = z.object({
-  file: z
-    .any()
-    .refine((file) => file instanceof File || file === undefined, {
-      message: "Invalid file type",
-    })
-    .optional(),
+  file: z.any().refine((file) => file instanceof File || file === undefined, {
+    message: "Invalid file type",
+  }),
+  transaction_date: z.string().min(2, "Transaction date field must be filled")
+    .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
+      message: "Invalid characters or HTML tags are not allowed",
+    }),
 });
 
 const rateSchema = z.object({
   CUP: z.coerce.number().positive("Rate must be positive"),
   MC: z.coerce.number().positive("Rate must be positive"),
   VC: z.coerce.number().positive("Rate must be positive"),
+  date: z.string().min(2, "Date field must be filled")
+    .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
+      message: "Invalid characters or HTML tags are not allowed",
+    }),
 });
 
 export default function ImportForm() {
@@ -49,6 +54,7 @@ export default function ImportForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       file: undefined,
+      transaction_date: ""
     },
   });
 
@@ -59,7 +65,7 @@ export default function ImportForm() {
 
   async function onSubmitRate(values: z.infer<typeof rateSchema>) {
     try {
-      const success = await updateExxhangeRateApi(values.CUP, values.MC, values.VC);
+      const success = await updateExchangeRateApi(values.CUP, values.MC, values.VC, values.date);
       if (success) {
         toast({
           title: "Exchange Rate Saved!",
@@ -78,7 +84,7 @@ export default function ImportForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      const success = await uploadBranchReportApi(values.file);
+      const success = await uploadBranchReportApi(values.file, values.transaction_date);
       if (success) {
         toast({ title: "Success!", description: "Report processed successfully" });
         form.reset();
@@ -153,6 +159,19 @@ export default function ImportForm() {
                     </FormItem>
                   )}
                 />
+                  <FormField
+                  control={rateForm.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> 
 
                 <Button type="submit" className="bg-amber-600 w-full">
                   Save
@@ -185,6 +204,19 @@ export default function ImportForm() {
                 </FormItem>
               )}
             />
+                <FormField
+                  control={form.control}
+                  name="transaction_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Transaction Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />               
           </div>
 
           <div className="flex justify-end gap-3">

@@ -19,7 +19,8 @@ export const rolePermissions: Record<string, string[]> = {
     "/reports/branch-pos/view",
     "/histories/merchant-pos/merchant-history",
     "/histories/branch-pos/branch-history",
-    "/missed/missed-date-table",
+    "/missed/missed-branch-date/view",
+    "/missed/missed-terminal-date/view",    
   ],
   user: [
     "/",
@@ -32,6 +33,7 @@ export const rolePermissions: Record<string, string[]> = {
     "/reports/branch-pos/view",
     "/histories/merchant-pos/merchant-history",
     "/histories/branch-pos/branch-history",
-    "/missed/missed-date-table",
+    "/missed/missed-branch-date/view",
+    "/missed/missed-terminal-date/view",    
   ],
 };

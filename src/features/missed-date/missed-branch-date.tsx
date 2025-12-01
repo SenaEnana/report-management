@@ -13,7 +13,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { CheckboxColumn } from "@/components/common/DataTable/CheckboxColumn";
-import { fetchMissedTransactionApi } from "@/services/MissedTransactionService";
+import { fetchMissedBranchTransactionApi } from "@/services/MissedTransactionService";
 
 export type MissedTransaction  = {
     id: string;
@@ -30,7 +30,7 @@ const columnsConfig = [
     { accessorKey: "missingDates", title: "Missing Dates" }, 
 ];
 
-export default function MissedDateTable() {
+export default function MissedBranchDate() {
     const [data, setData] = useState<MissedTransaction[]>([]);
     const [totalItems, setTotalItems] = useState(0);
     const [pageIndex ] = useState(0);
@@ -41,9 +41,8 @@ export default function MissedDateTable() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetchMissedTransactionApi();
+                const response = await fetchMissedBranchTransactionApi();
                 setData([response.data]);
-
                 setTotalItems(1);
             } catch (error) {
                 console.error("Error fetching terminals:", error);

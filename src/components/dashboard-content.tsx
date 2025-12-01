@@ -9,6 +9,7 @@ import { Input } from "./ui/input";
 import DropdownField from "./common/form/DropdownField";
 import { FormField, FormItem, FormLabel } from "./ui/form";
 import { useForm, FormProvider } from "react-hook-form";
+import { fetchActiveCountsApi } from "@/services/DashboardService";
 
 function DashboardContent() {
   const [merchants, setMerchants] = useState<any[]>([]);
@@ -35,14 +36,45 @@ function DashboardContent() {
     loadMerchants();
   }, []);
 
-  const features = [
-    { title: "Districts", value: 10 },  
-    { title: "Our Branches", value: 400 },
-    { title: "ATM Machines", value: 352 },
-    { title: "POS Machines", value: 500 },
-  ];
+  const [counts, setCounts] = useState({
+    districts: 0,
+    branches: 0,
+    terminals: 0,
+  });
 
-    const methods = useForm({
+useEffect(() => {
+  const loadData = async () => {
+    try {
+      const activeCounts = await fetchActiveCountsApi();
+      setCounts({
+        districts: activeCounts.districts,
+        branches: activeCounts.branches,
+        terminals: activeCounts.terminals,
+      });
+
+      const { data } = await fetchMerchantsApi(0, 10, "");
+      setMerchants(data);
+
+      const url = localStorage.getItem("TopTransactionMerchantUrl");
+      if (url) setReportUrl(url);
+      
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadData();
+}, []);
+
+const features = [
+  { title: "Districts", value: counts.districts },
+  { title: "Branches", value: counts.branches },
+  { title: "POS Machines", value: counts.terminals },
+];
+
+  const methods = useForm({
       defaultValues: {
         startDate: "",
         endDate: "",
@@ -80,7 +112,7 @@ function DashboardContent() {
   }
   return (
     <main className="flex-1 flex flex-col p-6 space-y-10">
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {features.map((item, index) => (
           <motion.div
             key={index}

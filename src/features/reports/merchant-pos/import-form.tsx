@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {updateExxhangeRateApi, uploadMerchantReportApi } from "@/services/ReportService";
+import {updateExchangeRateApi, uploadMerchantReportApi } from "@/services/ReportService";
 
 const formSchema = z.object({
   file: z.any().refine((file) => file instanceof File || file === undefined, {
@@ -62,7 +62,7 @@ export default function ImportForm() {
 
   async function onSubmitRate(values: z.infer<typeof rateSchema>) {
     try {
-      const success = await updateExxhangeRateApi(values.CUP, values.MC, values.VC, values.date);
+      const success = await updateExchangeRateApi(values.CUP, values.MC, values.VC, values.date);
       if (success) {
         toast({
           title: "Exchange Rate Saved!",

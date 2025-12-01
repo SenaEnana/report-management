@@ -55,14 +55,14 @@ const handleDownloadByTerminal = async () => {
     link.href = url;
     link.setAttribute(
       "download",
-      `merchant_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
+      `branch_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
     );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   } catch (error) {
     console.error("Error downloading file:", error);
-    alert("Error downloading merchant history. Check console for details.");
+    alert("Error downloading branch history. Check console for details.");
   }
 };
 
@@ -72,19 +72,19 @@ const handleDownloadByTerminal = async () => {
     return;
   }
   try {
-    const url = `http://172.24.111.254:5000/api/export/all-merchant-history-date?from=${from}&to=${to}`;
+    const url = `http://172.24.111.254:5000/api/export/all-branch-history-date?from=${from}&to=${to}`;
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute(
       "download",
-      `merchant_history_${from}_to_${to}.xlsx`
+      `branch_history_${from}_to_${to}.xlsx`
     );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   } catch (error) {
     console.error("Error downloading file:", error);
-    alert("Error downloading merchant history. Check console for details.");
+    alert("Error downloading branch history. Check console for details.");
   }
 };
 
