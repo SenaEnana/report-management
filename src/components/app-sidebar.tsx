@@ -77,6 +77,14 @@ const data = {
         { title: "Branch History", url: "/histories/branch-pos/branch-history" },
       ],
     },
+    {
+      title: "Missed Report",
+      url: "/missed",
+      icon: ChartArea,
+      items: [
+        { title: "Missed Date", url: "/missed/missed-date-table" },
+      ],
+    },
   ],
 };
 
@@ -101,6 +109,10 @@ const filteredNav = data.navMain
       return item;
     }
 
+    if (item.title === "Missed Report") {
+      return item;
+    }
+
     if (item.items) {
       const filteredItems = item.items.filter((sub) =>
         sub.title.toLowerCase().includes("view")
@@ -114,34 +126,6 @@ const filteredNav = data.navMain
     return item;
   })
   .filter(Boolean) as typeof data.navMain;
-
-
-
-// const filteredNav = data.navMain
-//   .map((item) => {
-//     if (role !== "admin" && item.title === "User Management") {
-//       return null;
-//     }
-
-//     if (role === "admin") {
-//       return item;
-//     }
-
-//     if (item.items) {
-//       const filteredItems = item.items.filter((sub) =>
-//         sub.title.toLowerCase().includes("view")
-//       );
-
-//       if (filteredItems.length === 0) return null;
-
-//       return { ...item, items: filteredItems };
-//     }
-
-//     return item;
-//   })
-//   .filter(Boolean) as typeof data.navMain;
-
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

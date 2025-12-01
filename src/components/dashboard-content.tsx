@@ -5,12 +5,19 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { downloadTopMerchantApi, fetchMerchantsApi } from "@/services/MerchantService";
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
+import { Input } from "./ui/input";
+import DropdownField from "./common/form/DropdownField";
+import { FormField, FormItem, FormLabel } from "./ui/form";
+import { useForm, FormProvider } from "react-hook-form";
 
 function DashboardContent() {
   const [merchants, setMerchants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reportUrl, setReportUrl] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   useEffect(() => {
     const loadMerchants = async () => {
@@ -34,6 +41,39 @@ function DashboardContent() {
     { title: "ATM Machines", value: 352 },
     { title: "POS Machines", value: 500 },
   ];
+
+    const methods = useForm({
+      defaultValues: {
+        startDate: "",
+        endDate: "",
+        filterType: "",
+      },
+    });
+
+    const handleDownload = () => {
+      if (!startDate || !endDate || !filterType) {
+        alert("Please select start date, end date and filter type.");
+        return;
+      }
+
+      let url = "";
+
+      if (filterType === "txnAmount") {
+        url = `http://172.24.111.254:5000/api/export/top-merchants-amount?startDate=${startDate}&endDate=${endDate}`;
+      } else {
+        url = `http://172.24.111.254:5000/api/export/top-merchants-txn?startDate=${startDate}&endDate=${endDate}`;
+      }
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `top_merchants_${filterType}_${startDate}_to_${endDate}.xlsx`
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
 
   if (!reportUrl) {
     return <p>No data available.</p>;
@@ -66,6 +106,49 @@ function DashboardContent() {
               Top Ten Transaction Merchants
             </CardTitle>
           </CardHeader>
+          <FormProvider {...methods}>
+          <div className="flex items-center gap-2 rounded-lg">
+            <FormField
+              name="startDate"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>Start Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="endDate"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>End Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </FormItem>
+              )}
+            />
+            <DropdownField
+              name="filterType"
+              label="Filter By"
+              value={filterType}
+              onChange={(value) => setFilterType(value)}
+              options={[
+                { id: "txnAmount", name: "Transaction Amount" },
+                { id: "txnNumber", name: "Transaction Number" }
+              ]}
+            />
+            <Button className="bg-amber-500" onClick={handleDownload}>
+              <Download className="mr-2 h-4 w-4" /> Download by Filter
+            </Button>
+          </div>
+        </FormProvider>
             <Button className="bg-amber-500 float-end m-2"
             onClick={() => { downloadTopMerchantApi()
             }}

@@ -3,6 +3,8 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {downloadAllMerchantHistoryApi, merchantHistoryApi } from "@/services/MerchantService";
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
+import { useForm, FormProvider } from "react-hook-form";
+import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 export type Merchant = {
@@ -30,6 +32,8 @@ function MerchantHistory() {
   const [terminalCode, setTerminalCode] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState(""); 
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState(""); 
   const [reportUrl, setReportUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,9 +52,19 @@ function MerchantHistory() {
     loadMerchants();
   }, []);
 
-  const handleDownloadByDate = async () => {
+  const methods = useForm({
+    defaultValues: {
+        terminalCode: "",
+        fromDate: "",
+        toDate: "",
+        from: "",
+        to: "",
+      },
+    });
+
+  const handleDownloadByTerminal = async () => {
   if (!terminalCode || !fromDate || !toDate) {
-    alert("Please fill terminal code, from date, and to date");
+    alert("Please fill terminal code, start date, and end date");
     return;
   }
   try {
@@ -60,6 +74,28 @@ function MerchantHistory() {
     link.setAttribute(
       "download",
       `merchant_history_${terminalCode}_${fromDate}_to_${toDate}.xlsx`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+    alert("Error downloading merchant history. Check console for details.");
+  }
+};
+
+  const handleDownloadByDate = async () => {
+  if (!from || !to) {
+    alert("Please fill start date, and end date");
+    return;
+  }
+  try {
+    const url = `http://172.24.111.254:5000/api/export/all-merchant-history-date?from=${from}&to=${to}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `merchant_history_${from}_to_${to}.xlsx`
     );
     document.body.appendChild(link);
     link.click();
@@ -82,27 +118,84 @@ function MerchantHistory() {
               Merchants Transaction History 
             </CardTitle>
           </CardHeader>
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg mb-4">
-            <Input
-              placeholder="Terminal Code"
-              value={terminalCode}
-              onChange={(e) => setTerminalCode(e.target.value)}
-              className="w-[180px]"
-            />            
-            <Input
-              type="date"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
+        <FormProvider {...methods}>
+          <div className="flex items-center gap-2 rounded-lg">
+            <FormField
+              name="terminalCode"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>Terminal Code</FormLabel>
+                  <Input
+                    type="text"
+                    value={terminalCode}
+                    placeholder="Enter Terminal Code"
+                    onChange={(e) => setTerminalCode(e.target.value)}
+                  />
+                </FormItem>
+              )}
+            />  
+            <FormField
+              name="fromDate"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>Start Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </FormItem>
+              )}
+            />                      
+            <FormField
+              name="toDate"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>End Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </FormItem>
+              )}
             />
-            <Input
-              type="date"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-            />
+            <Button className="bg-amber-500" onClick={handleDownloadByTerminal}>
+              <Download className="mr-2 h-4 w-4" /> Download by Terminal
+            </Button>
+          </div>      
+            <div className="flex items-center gap-2 p-4 rounded-lg mb-1">          
+            <FormField
+              name="from"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>Start Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={from}
+                    onChange={(e) => setFrom(e.target.value)}
+                  />
+                </FormItem>
+              )}
+            />              
+            <FormField
+              name="to"
+              render={() => (
+                <FormItem className="flex-1">
+                  <FormLabel>End Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                  />
+                </FormItem>
+              )}
+            />  
             <Button className="bg-amber-500" onClick={handleDownloadByDate}>
               <Download className="mr-2 h-4 w-4" /> Download by Date
             </Button>
           </div>
+        </FormProvider> 
             <Button
               className="bg-amber-500 float-end m-2"
               onClick={() => { downloadAllMerchantHistoryApi()
@@ -131,42 +224,24 @@ function MerchantHistory() {
                   <th scope="col" className="px-6 py-6">
                     District
                   </th>
-                  {/* <th scope="col" className="px-6 py-6">
-                    Local Txns
-                  </th>    */}
                   <th scope="col" className="px-6 py-6">
                     Local Amount
                   </th>    
-                  {/* <th scope="col" className="px-6 py-6">
-                    VISA Txns
-                  </th>  */}
                   <th scope="col" className="px-6 py-6">
                     VISA Amount $
                   </th>  
-                  {/* <th scope="col" className="px-6 py-6">
-                    MC Txns
-                  </th> */}
                   <th scope="col" className="px-6 py-6">
                     MC Amount $
                   </th> 
-                  {/* <th scope="col" className="px-6 py-6">
-                    CUP Txns
-                  </th> */}
                   <th scope="col" className="px-6 py-6">
                     CUP Amount $
                   </th>
-                  {/* <th scope="col" className="px-6 py-6">
-                   Total Txns
-                  </th>  */}
                   <th scope="col" className="px-6 py-6">
                    Sum Total Txn
                   </th> 
                    <th scope="col" className="px-6 py-6">
                    Sum Total Amount
                   </th> 
-                  {/* <th scope="col" className="px-6 py-6">
-                  Transaction Date
-                  </th>  */}
                 </tr>
               </thead>
               <tbody>
@@ -184,17 +259,12 @@ function MerchantHistory() {
                     <td className="px-6 py-6">{m.terminal_name || "-"}</td>
                     <td className="px-6 py-6">{m.branch || "-"}</td>
                     <td className="px-6 py-6">{m.district || "-"}</td>
-                    {/* <td className="px-6 py-6">{m.sum_local_txn || "-"}</td>    */}
                     <td className="px-6 py-6">{m.sum_local_txn_amnt || "-"}</td>                   
-                    {/* <td className="px-6 py-6">{m.sum_visa_txn || "-"}</td>    */}
                     <td className="px-6 py-6">{m.sum_visa_amount || "-"}</td>
-                    {/* <td className="px-6 py-6">{m.sum_mc_txn || "-"}</td>  */}
                     <td className="px-6 py-6">{m.sum_mc_amount || "-"}</td>
-                    {/* <td className="px-6 py-6">{m.sum_cup_txn || "-"}</td> */}
                     <td className="px-6 py-6">{m.sum_cup_amount || "-"}</td>    
                     <td className="px-6 py-6">{m.sum_total_txn || "-"}</td>  
                     <td className="px-6 py-6">{m.sum_total_amount || "-"}</td>
-                    {/* <td className="px-6 py-6">{m.transaction_date || "-"}</td>   */}
                   </tr>
                 ))}
               </tbody>

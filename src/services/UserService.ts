@@ -76,12 +76,3 @@ export const softDeleteUserApi = async (user_id: string) => {
         throw new Error(errorMessage);
     }
 };
-
-
-// 1. http://172.24.111.254:5000/api/reports-----> here transaction_date is required
-// 2. http://172.24.111.254:5000/api/currency-----> here date is required
-// 3. http://172.24.111.254:5000 /api/export/missing-transactions--------->get method it display list of date missed 
-// 4.http://172.24.111.254:5000 /all-merchant-history-date -----> use get method and pass from and to date parameter as query
-// 5. http://172.24.111.254:5000/top-merchants_txn----> list top 10 merchant by transaction number
-// 6. http://172.24.111.254:5000/top-merchants_amount---------> list top 10 merchant by transaction amount
-// 7.http://172.24.111.254:5000/summary/active-counts-----------> get data for number of pos, district and branch
