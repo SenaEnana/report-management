@@ -102,9 +102,9 @@ const filteredNav = data.navMain
       return item;
     }
 
-    if (item.title === "Reports") {
-      return item;
-    }
+    // if (item.title === "Reports") {
+    //   return item;
+    // }
 
     if (item.title === "Histories") {
       return item;
