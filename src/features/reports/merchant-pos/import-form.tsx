@@ -36,9 +36,9 @@ const formSchema = z.object({
 });
 
 const rateSchema = z.object({
-  CUP: z.coerce.number().positive("Rate must be positive"),  
-  MC: z.coerce.number().positive("Rate must be positive"),  
-  VC: z.coerce.number().positive("Rate must be positive"),
+  CUP: z.coerce.number(),  
+  MC: z.coerce.number(),  
+  VC: z.coerce.number(),
   date: z.string().min(2, "Date field must be filled")
     .refine((value) => !/<\/?[^>]+(>|$)/.test(value), {
       message: "Invalid characters or HTML tags are not allowed",
