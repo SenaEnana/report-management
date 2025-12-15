@@ -106,7 +106,7 @@ export default function ImportForm() {
           <DialogTrigger asChild>
             <Button className="bg-amber-500">Submit Exchange Rate</Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-white text-black dark:bg-zinc-900 dark:text-white">
             <DialogHeader>
               <DialogTitle>Submit Exchange Rate</DialogTitle>
               <DialogDescription>Enter the exchange rate details below.</DialogDescription>
@@ -153,7 +153,7 @@ export default function ImportForm() {
                     </FormItem>
                   )}
                 />  
-                  <FormField
+                <FormField
                   control={rateForm.control}
                   name="date"
                   render={({ field }) => (
