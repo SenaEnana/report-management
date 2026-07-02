@@ -1,3 +1,9 @@
+```md
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
 # 🏢 Report Management System
 
 A modern web-based report management system developed for **Nib International Bank** to streamline merchant and POS report management. The system enables authorized users to monitor POS performance, manage merchant and branch information, and generate reports through an intuitive dashboard.
@@ -45,8 +51,18 @@ A modern web-based report management system developed for **Nib International Ba
 ```bash
 git clone https://github.com/SenaEnana/report-management.git
 
-cd report-management-system
+cd report-management
 
 npm install
 
 npm run dev
+
+## 🎯 Project Goals
+Improve report accessibility
+Simplify merchant and branch management
+Provide quick insights into POS performance
+Reduce manual reporting processes
+
+## 👨‍💻 Author
+
+Sena Adane
