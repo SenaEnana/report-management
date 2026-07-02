@@ -22,13 +22,15 @@ A modern web-based report management system developed for **Nib International Ba
 
 ### Backend
 - REST API
+- Express 
 
 ### Database
 - MySQL
 
 ## 📸 Screenshots
 
-> Add screenshots here
+> <img width="1270" height="1413" alt="rms-light" src="https://github.com/user-attachments/assets/622a77a6-c199-45e1-a4be-3fec7e48a747" />
+
 
 ## 🚀 Getting Started
 
