@@ -10,7 +10,7 @@ A modern web-based report management system developed for **Nib International Ba
 ## ✨ Features
 
 - 🔐 Secure role-based authentication
-- 📊 Interactive dashboard with key insights
+- 📊 Interactive dashboard with key data
 - 💳 POS performance monitoring
 - 🏪 Merchant management
 - 🏢 Branch management
@@ -60,7 +60,7 @@ npm run dev
 ## 🎯 Project Goals
 Improve report accessibility
 Simplify merchant and branch management
-Provide quick insights into POS performance
+Provide quick information into POS performance
 Reduce manual reporting processes
 
 ## 👨‍💻 Author
