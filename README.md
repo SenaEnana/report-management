@@ -5,7 +5,7 @@
 
 # 🏢 Report Management System
 
-A modern web-based report management system developed for **Nib International Bank** to streamline merchant and POS report management. The system enables authorized users to monitor POS performance, manage merchant and branch information, and generate reports through an intuitive dashboard.
+A modern web-based report management system developed for **Nib International Bank** to facilitate merchant and POS report management. The system enables authorized users to monitor POS performance, manage merchant and branch information, and generate reports through an intuitive dashboard.
 
 ## ✨ Features
 
