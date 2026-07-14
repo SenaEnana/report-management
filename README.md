@@ -58,10 +58,10 @@ npm run dev
 ```
 
 ## 🎯 Project Goals
-Improve report accessibility
-Simplify merchant and branch management
-Provide quick information into POS performance
-Reduce manual reporting processes
+-Improve report accessibility
+-Simplify merchant and branch management
+-Provide quick information into POS performance
+-Reduce manual reporting processes
 
 ## 👨‍💻 Author
 
